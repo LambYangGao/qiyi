@@ -4,10 +4,10 @@
 #include <QMainWindow>
 #include <QTcpSocket>
 #include <QUdpSocket>
-//#include <QAbstractSocket>
+#include <QSettings>
+#include <QtMath>
 #include <qmessagebox.h>
 #include <QMouseEvent>
-
 #include <QImage>
 #include <QPaintEvent>
 #include <QBasicTimer>
@@ -16,7 +16,6 @@
 #include <QThread>
 #include <iostream>
 #include <stdint.h>
-
 #include <QDesktopWidget>
 #include <QSerialPortInfo>
 #include <QSerialPort>
@@ -24,23 +23,14 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QReadWriteLock>
-
 #include "vidoeplayer.h"
 #include "HidThread.h"
 #include "fullscreenform.h"
-#include "theo_pp_dll.h"
-//#include "dlgexposure.h"
 #include "networkcomm.h"
 #include "dlgAutoHide.h"
 #include "CommonDef.h"
 #include "CoordTranser.h"
-#include "trackerthread.h"
-#include "pid.h"
-#include <opencv2/opencv.hpp>
-#include <opencv2/highgui.hpp>
 #include "pod_cmd.h"
-#include "ctlloopthd.h"
-#include "qtmaterialautocomplete.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -74,7 +64,6 @@ QT_END_NAMESPACE
 #define PKT_TYPE_SETIPADDR  25
 #define PKT_TYPE_SETIPMASK  26
 #define PKT_TYPE_SETIPGW    27
-//#define PKT_TYPE_CAMSWITCH  29
 #define PKT_TYPE_PALETTE    28
 #define PKT_TYPE_PTZPANTILT 29
 #define PKT_TYPE_ADJDRIFT   30
@@ -90,32 +79,18 @@ QT_END_NAMESPACE
 #define PKT_TYPE_IRPOWER    40
 #define PKT_TYPE_CAMCFG     41
 #define PKT_TYPE_TRANSCOMBUF    42
-
 #define  PTZ_SPEED_VAL 2000     //  20°/s
 #define  PTZ_PELCO_SPD_VAL  32
-
-//#define PI 3.1415927
-//#define PI 3.1415926535897922
-
 #define HID_RESOLUTION  0x200
-
-
 #define  PTZMSG_BUF_LEN     33  //转台返回信息的buffer长度
-
 #define OPMODE_STICK    0
 #define OPMODE_TOZERO   1
 #define OPMODE_CENTER   2
 #define OPMODE_MARKING  3
-
-
-//#define GD200           1       //转台型号
-//#define PUV150          1       //转台型号
-//#define S500           1       //转台型号
 #define GD280S           1
 
 #define IMAGE_PIXEL_WIDTH   1920
 #define IMAGE_PIXEL_HEIGHT   1080
-
 #define IMAGE_PIXEL_WIDTH_IR   800
 #define IMAGE_PIXEL_HEIGHT_IR   600
 
@@ -127,16 +102,7 @@ struct lensData_s
     double HFov;  //水平视场角
 };
 
-/*typedef struct ZhiKongGuideData_s
-{
-    double direction;
-    double pitch;
-    int distance;
-    int timestamp;
-}ZhiKongGuideData_s; */
-
 using namespace std;
-//using namespace cv;
 
 class MainWindow : public QMainWindow
 {
@@ -159,7 +125,6 @@ public:
         double dblA;//°，[0, 360), 分辨率0.1"
         double dblE;//°，[-90, 190], 分辨率0.1"
     };
-    //QString msCommCenter;
     QByteArray mzRecvBuf;//收交互引导buf
     int mnBufIdx;//滑动窗口指针
     char * mpSendBuf;//发交互buf
@@ -209,23 +174,17 @@ typedef struct gTargetPos_s
     QString msStationGdcType;
 
 public slots:
-    void Theo_timeOut();
     void stick_timeOut();
-    /*void focus_timeOut();
-    void zoom_timeOut(); */
     void sendStepless_timeOut();
-
     void chkIfOffline_timeOut();
     void zhiKongSocket_timeOut();
-    void delayPid_timeOut();
+
 
 private:
     Ui::MainWindow *ui;
 
     char serverIp_A[16];
     unsigned int serverPort_A;
-    //char serverIpMask_A[16];
-    //char serverIpGW[16];
     char serverIp_B[16];
     unsigned int serverPort_B;
     char mZhiKongIp[16];
@@ -252,14 +211,7 @@ private:
     bool connectFlag_B;
     bool connectRtspFlag_A;
     bool connectRtspFlag_B;
-    //bool scan_enabled;  //巡航开始标记
-    //QBasicTimer timer;
-    //QBasicTimer timerJoyStick;
-    //int timerScan;
     QTimer * timerJoystick;
-    /*QTimer * timerFocusLoop;
-    QTimer * timerZoomLoop; */
-    QTimer * timerTheo_pp;
     QTimer * timerRecFileSeg;
 
     QTimer * timerTestStepless;
@@ -268,23 +220,15 @@ private:
 
     QTimer * timerChkIfOffline;
     QTimer * timerZhiKongSocket;
-    QTimer * timerDelayPid;
 
     bool toAngleflag;
-
     double mExpo;
-
-    //void timerEvent(QTimerEvent *event) override;
 
     QSerialPortInfo * SerialPortInfo;
     QSerialPort SerialPort;
 
     int currentPresetPos;
     int minP,maxP;
-    //QThread mThdSendUcPkt;
-    //QThread mThdRecvUcPkt;
-    //UdpRecvThread * recvThd;
-    //UdpSendThread * sendThd;
 
     int operateMode;
     double dd_diffx;
@@ -326,8 +270,6 @@ private:
     int hdZoomVal_B;
     int hdLensVal_B;
     int hdBianBei_B;
-    cv::Rect roiBox;
-
 
     int speedGear;
 
@@ -342,13 +284,9 @@ private:
     long recvPktNum_A;
     long recvPktNum_B;
 
-    HidProcThd * hid;   // Create empty HidDevice object
-    Theo_PP_DLL * pTheo_PP_DLL;
+    HidProcThd * hid;                  // Create empty HidDevice object
     NetworkComm * pnetworkComm;        // 指控通信
     NetworkComm * pGyroComm;           // 陀螺仪通信
-
-    TrackerThread * trackerThd;
-    ctlLoopThd * workStateLoopThd;
 
     QTime CurTime;
     pod_cmd mPodCmd;
@@ -374,7 +312,6 @@ private:
     bool checkip(QString ip);
     uint32_t IPV4StringToInteger(const QString& ip);
     int  readCfgFile();
-    //void readOsdWordFile();
     void writeCfgFile();
     void writeCfgFile(char * connectIp);
     void updateJoyStick();  //响应摇杆操作
@@ -407,18 +344,7 @@ private:
     int mStickBtn;
     int mStickBtn2;
     QLabel * LabStatebarInfo;   //状态显示标签
-    //PID
-    struct PID2 PidX,PidY;
-    float mPid_X_Scale;
-    float mPid_X_P;
-    float mPid_X_I;
-    float mPid_X_D;
-    float mPid_Y_Scale;
-    float mPid_Y_P;
-    float mPid_Y_I;
-    float mPid_Y_D;
-    int mPidMaxOut;
-    int mPidMinOut;
+
     int mPtzDefSpeed;
 
     unsigned int pelco_spd_val;
@@ -435,9 +361,6 @@ private:
     double mBorder180End;
 
     int mFoc_or_zoom_flag = 0;
-
-    /*ZhiKongGuideData_s gZhiKongGuideData_s[3];
-    int predict_Radar_Target(double latest_direction,double latest_pitch,int latest_dist);     //雷达引导时预测目标位置 */
 
     int getOptimalFocusValue(int lensVal);  // 根据焦距值获取最佳对焦位置
     void sendAutoFocusCommand(int focusValue, QUdpSocket* udpSocket);  // 发送自动对焦命令
@@ -461,12 +384,9 @@ protected:	//mouse
     void wheelEvent(QWheelEvent *event);             //滑轮
     void sendCmd();
     QString uncharToQstring(unsigned char * id,int len);
-    //void setMouseState(MouseState ms, int wheelVal);
-    //void setMouseUIdefault();
 
     void paintEvent(QPaintEvent *event);
 
-    //double dd_Direction,dd_Pitch;
     bool eventFilter(QObject *watched, QEvent *event);  ////事件过滤
     void drawAngleMeter(QLabel * uipad,int direction,int angle,int pitch);  //控件绘制函数
     void drawCross(QLabel * uipad, QPixmap * fitPixmap);
@@ -474,15 +394,12 @@ protected:	//mouse
     void lblPaintAngleGap(double d1,double p1,double d2,double p2);
     void drawViewAngle(QPixmap *fitPixmap,int scrWidth,int scrHeight);
     void drawStickExpo(double expo);
-    void drawROIBox(QLabel * uipad,QPixmap * fitPixmap,cv::Rect box );
     void drawMouseBox(QPixmap * fitPixmap,int x,int y);
     void drawAzimuthScale(QPixmap * fitPixmap,int scrWidth,int scrHeight);
 
     void drawVirtualJoyStick(int x,int y, int btn);
     void getMouseOnVirtualJoyStk(QMouseEvent *event);
     void updateVirtualJoyStick(int x,int y);
-    //int ZoomValToLensData(int zoomVal,int * BeiShu,int * Lens,double * hfov);
-    //int ZoomValToLensData(int zoomVal,float * BeiShu,float * Lens,double * hfov);
     int ZoomValToLensData_Improved(int in_zoomVal, int* BeiShu, int* Lens, double* hfov);
     void logZoomAndFOV(int zoomVal, int lensVal, double fov, const QString& camera);
 
@@ -500,7 +417,6 @@ protected:	//mouse
 private slots:
     void on_pbConnect_clicked();
     void on_pbDisConnect_clicked();
-    //void on_pushButton_Send_clicked();
     void on_SendText_changed();
     void socket_Read_Data_A();
     void socket_Read_Data_B();
@@ -512,12 +428,8 @@ private slots:
 
     void slotGetOneFrameCh1(QImage img);
     void slotGetOneFrameCh2(QImage img);
-    //void slotGrabCamlinkFrame(void * raw);
     void slotGetSigBackToMainWin();       //全屏相应
     void slotGetUpdateJoystick();
-    void slotUpdateTrackingBox(int num,int x,int y,int width,int height);
-    void slotUpdateTrackingBoxDeg(int num,int x,int y,int width,int height);
-    void slotUpdateDetectingBox(int num,int id,int x,int y,int width,int height,float prob);
     void on_pushButton_swap_clicked();
 
     void on_pbPicInPicOnOff_clicked();
@@ -536,24 +448,10 @@ private slots:
     void on_pbZoomOut_released();
     void on_pbZoomIn_pressed();
     void on_pbZoomIn_released();
-
-    //void on_pbScan_clicked();
-
     void on_pbSetZero_clicked();
-
     void on_pbWiper_clicked();
-
-    //void on_pbPreset_clicked();
-
-    //void on_cbxPresetAct_currentIndexChanged(int index);
-
     void on_cbxPresetNo_currentIndexChanged(int index);
-
-    //void on_cbxPresetNoEdit_currentIndexChanged(const QString &arg1);
-
     void on_cbxPresetNoEdit_currentIndexChanged(int index);
-
-    //void on_pbAutoFocus_clicked();
 
     void on_pbFocusF_released();
 
@@ -562,16 +460,7 @@ private slots:
     void on_pbFocusF_pressed();
 
     void on_pbFocusN_pressed();
-/*
-    void on_pbLoopScan_clicked();   //自动扫描
-
-
-    void on_pbHGyroCtl_clicked();
-    void on_pbVGyroCtl_clicked();*/
     void on_pbSetInitZero_clicked();
-
-    //void on_pbResetMotor_clicked();
-
     void on_pbRec_clicked();
 
     void on_cbxEditLock_sys_stateChanged(int arg1);
@@ -580,12 +469,7 @@ private slots:
     void on_leSetIP_textChanged(const QString &arg1);
     void on_leSetIPMask_textChanged(const QString &arg1);
     void on_leSetIPGageway_textChanged(const QString &arg1);
-    //void on_leManuSpeed_textChanged(const QString &arg1);
     void on_leAutoSpeed_textChanged(const QString &arg1);
-
-    //void on_pbWrite485_clicked();
-
-    //void on_pbCamPWR_clicked();
 
     void on_cbxPalette_currentIndexChanged(int index);
 
@@ -629,8 +513,6 @@ private slots:
 
     void on_leOsdWord_textChanged(const QString &arg1);
 
-    void on_pbOsdWordSave_clicked();
-
     void on_rb_StickSpeedH_clicked();
 
     void on_rb_StickSpeedL_clicked();
@@ -643,20 +525,12 @@ private slots:
 
     void on_pbDefog_pressed();
 
-    //void on_cbx_CfgLocal_currentIndexChanged(int index);
-
-    //void on_pbSSetDiffY_clicked();
-
-    //void on_pbResetDiffY_clicked();
-
     void timerRecFileSeg_timeOut();
 
     void configCAM(int camid,int cmdid,int val1,int val2);
 
     void slotHidChanged(int id);
     void on_leSetHdCamIP_textChanged(const QString &arg1);
-
-    //void on_le_setStickExpo_returnPressed();
 
     void on_rb_StickSpeedM_clicked();
     void DrawGuideOSD(QPixmap * pixTmp, double dblCamField);
@@ -677,9 +551,6 @@ private slots:
     void on_cbxOSDFontHeight_currentIndexChanged(const QString &arg1);
 
     void on_leOSDLocationY_textChanged(const QString &arg1);
-	void on_rb_trackRoi40_clicked();
-    void on_rb_trackRoi20_clicked();
-    void on_rb_trackRoi10_clicked();
      void on_rb_KcfMarking_clicked();
     void on_rb_TopHatMarking_clicked();
     void on_rb_WhCentroidMarking_clicked();
@@ -787,8 +658,6 @@ private slots:
     
     void on_rb_SelDetectMtd2_clicked();
 
-//    void on_rb_SelIRSmallTarget_clicked();
-    
     void on_pbDbgSendconvAE_clicked();
 
     void on_pbcalcBlh2Rae_clicked();
