@@ -249,10 +249,7 @@ void MainWindow::connectPtzAUc()
     else
     {
         connectFlag_A = true;
-        /*ptzCmdStop[6]=0xff & ( ptzCmdStop[1]+ ptzCmdStop[2]+ ptzCmdStop[3]+ ptzCmdStop[4]+ ptzCmdStop[5]);
-        udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));*/
         qDebug()<<tr("GD_A connect OK");
-        //QMessageBox::warning(this,tr("Tips"),tr("connect server success"),QMessageBox::Yes,QMessageBox::No);
     }
 }
 
@@ -394,14 +391,9 @@ void MainWindow::initGlobalParam()
     connectRtspFlag_B = false;
     connectGyroFlag = false;
 
-    //ui->gridLayout_Theo->addWidget(pTheo_PP_DLL);
     double Site_B = 0;//站址纬度 度°
     double Site_L = 0;//站址经度 度°
     double Site_H = 0;//站址高程 m
-    //Step1 :设置设备站址 及坐标系*1-84坐标系,2-2000坐标系,3-54坐标系,4-靶场坐标系
-    //pTheo_PP_DLL->InitialDll(Site_B,Site_L,Site_H,Site_B,Site_L,Site_H,2);
-
-
     operateMode = OPMODE_MARKING;  //JoyStick;
     mAETheo.dblA = 0;
     mAETheo.dblE = 0;
@@ -457,10 +449,6 @@ void MainWindow::initControlStat()
     ui->label_6->setVisible(0);
     ui->lbDiffX->setVisible(0);   //只在调试时使用，正式版本不打开
     ui->lbDiffY->setVisible(0);   //只在调试时使用，正式版本不打开
-    //ui->pbSetZero->setVisible(0);
-
-    //ui->pbOnOffColor->setVisible(1);
-
     ui->lbl_lenVal->setVisible(1);
     ui->lbl_focalVal->setVisible(1);
     ui->lbl_focalVal_B->setVisible(1);
@@ -476,8 +464,6 @@ void MainWindow::initControlStat()
     ui->lblPadDirection->installEventFilter(this);//安装事件过滤器
     ui->lblPadDirection_B->installEventFilter(this);//安装事件过滤器
     ui->lbl_SimJoystick->installEventFilter(this);//安装事件过滤器
-    //ui->lbl_padAngleGap->installEventFilter(this);//安装事件过滤器
-    //ui->lbl_stickEXPO->installEventFilter(this);//安装事件过滤器
 
     QIntValidator* validv = new QIntValidator;
     validv->setRange(1, 16);//可以改成（-255,255），这样就是负数
@@ -524,11 +510,9 @@ void MainWindow::initTimerAndThread()
     hid= new HidProcThd;
     hid->start();
 
-//#ifndef SIMUCAMERA
     timerChkIfOffline = new QTimer();  // 离线检测
     connect(timerChkIfOffline,SIGNAL(timeout()),this,SLOT(chkIfOffline_timeOut()));
     timerChkIfOffline->start(1000 * 5);
-//#endif
 
     timerJoystick= new QTimer();  // 遥杆
     connect(timerJoystick,SIGNAL(timeout()),this,SLOT(stick_timeOut()));
@@ -597,7 +581,6 @@ void MainWindow::calcScreenPos(int * x_out,int * y_out,int x_in,int y_in,int scr
 void MainWindow::getMouseOnVirtualJoyStk(QMouseEvent *event)
 {
     QPoint p_SimuStick = event->pos() - ui->tabWidConfig->pos();
-    //QPoint p_SimuStick = event->pos() - ui->groupBox_10->pos();
     if(p_SimuStick.x() > 20 && p_SimuStick.x() < ui->lbl_SimJoystick->width()+20 && p_SimuStick.y() > 0 && p_SimuStick.y() < ui->lbl_SimJoystick->height())
     {
         if (event->button() == Qt::LeftButton)
@@ -609,7 +592,7 @@ void MainWindow::getMouseOnVirtualJoyStk(QMouseEvent *event)
             if(btnStatus == 1)
             {
                 mJoy_x = p_SimuStick.x()-20;
-                mJoy_y = p_SimuStick.y()-15;   //qDebug()<<"mJoy_y:"<<mJoy_y  <<"    event->pos().y:"<<event->pos().y() <<"    ui->tabWidConfig->pos().y:"<<ui->tabWidConfig->pos().y();
+                mJoy_y = p_SimuStick.y()-15;   
             }
             else
             {
@@ -1077,8 +1060,8 @@ void MainWindow::handleDirectionPitchDistanceProcessing()
          ui->te_Output->append("警告：惯导数据异常！！！！！！！！！！");
          return;
      }
-     // 调试惯导角度
-    debugGyroAngles();
+    // 调试惯导角度
+    // debugGyroAngles();
 
 //    ui->te_Output->append(QString("处理方位俯仰距离指令 - 方位:%.2f°, 俯仰:%.2f°, 距离:%1m")
 //                         .arg(direction, 0, 'f', 2)
@@ -1152,7 +1135,6 @@ int MainWindow::convZhiKongCameraCmd(int camVal)
     switch(camVal)
     {
         case 0:
-        //qDebug()<<"case 0:" <<sendZoomFlag <<sendFocFlag;
             if(sendFocFlag == true)
             {
                 on_pbFocusF_released();
@@ -1237,7 +1219,6 @@ void MainWindow::socket_Read_Data_A()
     if( udpskt == NULL) return;
 
     QByteArray buffer;
-    //uint8_t cmdbuf[7];
     buffer = udpskt->readAll();
     int p=0;
     int direction = 0;
@@ -1245,7 +1226,6 @@ void MainWindow::socket_Read_Data_A()
     int zoomVal = 0;
     int focalVal =0;
     recvPktNum_A++;
-//qDebug()<<"socket_Read_Data_A() recvPktNum_A:"<<recvPktNum_A;
     ui->lbRecvPkt_A->setText(QString::number(recvPktNum_A) );
     if(buffer.length() < 7)
     {
@@ -1310,14 +1290,11 @@ void MainWindow::socket_Read_Data_A()
                         zoomVal = ((ch2&0xf)<<12) + ((ch3&0xf)<<8) + ((ch4&0xf)<<4) + (ch5&0xf);
                         if(0 == mFoc_or_zoom_flag )     // 0 is Focal return
                         {
-                            //qDebug()<<"A Focus Val:"<< QString::number(zoomVal)<<"  ch2: "<<ch2<<" "<<ch3<<" "<<ch4<<" "<<ch5;
-                            //ZoomValToLensData(zoomVal,&hdBianBei,&hdLensVal, &mHdViewAngle_A);
                             ui->lbl_focalVal->setText(QString::number(zoomVal));  //将聚焦值显示ui界面 估计是200ms一次
                         }
                         else    //Zoom pos return 变焦位置反馈模式
                         {
                             ZoomValToLensData_Improved(zoomVal, &hdBianBei, &hdLensVal, &mHdViewAngle_A);
-                            //logZoomAndFOV(zoomVal, hdLensVal, mHdViewAngle_A, "GDA");
                             ui->lbl_lenVal->setText(QString::number(hdLensVal)+"mm");
                             ui->lblBeishu->setText("X" + QString::number(hdBianBei, 'f',1));
                             ui->lblLens->setText( QString::number(mHdViewAngle_A,'f', 1)+"°");
@@ -1363,7 +1340,6 @@ void MainWindow::socket_Read_Data_B()
     if( udpskt == NULL) return;
 
     QByteArray buffer;
-    //uint8_t cmdbuf[7];
     buffer = udpskt->readAll();
     int p=0;
     int direction = 0;
@@ -1371,11 +1347,9 @@ void MainWindow::socket_Read_Data_B()
     int zoomVal = 0;
     int focalVal =0;
     recvPktNum_B++;
-    //qDebug()<<"socket_Read_Data_B() recvPktNum_B:"<<recvPktNum_B;
     ui->lbRecvPkt_B->setText(QString::number(recvPktNum_B) );
     if(buffer.length() < 7)
     {
-        //qDebug()<<"ptz buffer len="<<buffer.length();
         return;
     }
 
@@ -1396,7 +1370,6 @@ void MainWindow::socket_Read_Data_B()
         {
             case 0xff:
                 ch3 = (uint8_t)buffer[3+k] & 0xff;
-                //qDebug()<<"aa:"<<aa;
                 switch (ch3)
                 {
                     case 0x59:
@@ -1408,7 +1381,6 @@ void MainWindow::socket_Read_Data_B()
                         break;
                     case 0x5b:
                         pitch = (((uint8_t)buffer[4+k]<<8)&0xff00)+ (uint8_t)buffer[5+k];        //Range:0~9000 and 27000~35999
-                        //qDebug()<<"pitch:" << pitch;
                         switch(pitch)
                         {
                             case 0 ... 9000:
@@ -1436,13 +1408,10 @@ void MainWindow::socket_Read_Data_B()
                         zoomVal = ((ch2&0xf)<<12) + ((ch3&0xf)<<8) + ((ch4&0xf)<<4) + (ch5&0xf);
                         if(0 == mFoc_or_zoom_flag )     // 0 is Focal return
                         {
-                            //qDebug()<<"B Focus Val:"<< QString::number(zoomVal)<<"  ch2: "<<ch2<<" "<<ch3<<" "<<ch4<<" "<<ch5;
                             ui->lbl_focalVal_B->setText(QString::number(zoomVal));
                         }
                         else    //Zoom pos return
                         {
-                            //qDebug()<<"B zoomVal:"<< QString::number(zoomVal)<<"  ch2: "<<ch2<<" "<<ch3<<" "<<ch4<<" "<<ch5;
-                            //ZoomValToLensData(zoomVal,&hdBianBei_B,&hdLensVal_B, &mHdViewAngle_B);
                             ZoomValToLensData_Improved(zoomVal, &hdBianBei_B, &hdLensVal_B, &mHdViewAngle_B);
                             ui->lbl_lenVal_B->setText(QString::number(hdLensVal_B)+"mm");
                             ui->lblBeishu_B->setText("X" + QString::number(hdBianBei_B));
@@ -1543,7 +1512,6 @@ void MainWindow::socket_Disconnected_B()
 
 void MainWindow::paintEvent(QPaintEvent *event)
 {
- //   if(connectFlag == false) return;
     try
     {
         QImage img;
@@ -1554,12 +1522,7 @@ void MainWindow::paintEvent(QPaintEvent *event)
             {
                 return;
             }
-            //将图像按比例缩放成和小窗口一样大小
-
-            // auto start = std::chrono::high_resolution_clock::now();
-
             img = mImageCh1.scaled(ui->lblPad->size(), Qt::KeepAspectRatio);
-            //QImage image = mImage.mirrored(false, true);
             fitPixmap=QPixmap::fromImage(img);
             if(fitPixmap.isNull())
             {
@@ -1576,7 +1539,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
             {
                 return;
             }
-            //将图像按比例缩放成和小窗口一样大小
             img = mImageCh2.scaled(ui->lblPad_B->size(), Qt::KeepAspectRatio);
             fitPixmap=QPixmap::fromImage(img);
             if(fitPixmap.isNull())
@@ -1597,9 +1559,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    
-    //if(connectFlag == false) return false;
-
     if(watched==ui->lblPadDirection && event->type()==QEvent::Paint)//判断是否是lblImage控件，是否是绘制事件
     {
         drawAngleMeter(this->ui->lblPadDirection,mPtzDirection_A,mHdViewAngle_A,mPtzPitch_A); //绘制
@@ -1790,14 +1749,9 @@ void MainWindow::drawMouseHit(QPixmap * fitPixmap,int x_in,int y_in)
     QFont font;
     //设置显示字体的大小
     font.setPixelSize(20);
-
-    //painter.setCompositionMode(QPainter::CompositionMode_DestinationOver);
-    //QPen pen = p.pen();
     pen.setColor( QColor(255, 255, 255,255));
     p.setPen(pen);
     p.setFont(font);
-    //painter.drawText(fitPixmap.rect(), Qt::AlignCenter, imageText);
-
     int diffx = (x_in - IMAGE_PIXEL_WIDTH/2)/scr_du * 60;
     int diffy = (IMAGE_PIXEL_HEIGHT/2 - y_in)/scr_du * 60;
 
@@ -1828,12 +1782,8 @@ void MainWindow::drawVirtualJoyStick(int x,int y, int btn)
     p.setBrush(brush);
     p.setPen(pen);
     p.drawEllipse(0,0,160,160);
-
-
-    //pen.setWidth(1);//画笔粗细
     pen.setColor(QColor(0,0,0,255));//画笔颜色
     p.setPen(pen);
-    //p.drawEllipse(80,80,2,2);
     p.drawLine(0,80,160,80);
     p.drawLine(80,0,80,160);
 
@@ -1876,14 +1826,9 @@ void MainWindow::updateJoyStick()
         axial = hid->axialVal;
         btn=hid->btnVal2;
     hidLock.unlock();
-
-    //qDebug()<<"pan:"<<pan<<"  tilt:"<<tilt;
-
     if(pan_old != pan || tilt_old != tilt)   //方向 俯仰
     {
         double kh=25000;
-        //static short stopSended = 0;
-
         switch(lensVal)
         {
             case 400 ... 540:
@@ -1910,7 +1855,6 @@ void MainWindow::updateJoyStick()
         // 生成控制命令
         uint8_t * cmd = mPodCmd.crtSteplessCmd((pan_outVal ), -(tilt_outVal));
 
-        // 同时发送给A和B两个光电
         if(connectFlag_A != false)
         {
             udpSocket_A->write((char *)cmd,7);
@@ -1966,7 +1910,6 @@ void MainWindow::updateJoyStick()
         }
         else
             on_pbZoomIn_released();
-        //ui->te_Output->append(QString::number(axial));
         axial_old = axial;
     }
 }
@@ -1982,13 +1925,6 @@ void MainWindow::updateVirtualJoyStick(int x,int y)
 
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
-/*
-    QDateTime current_date_time =QDateTime::currentDateTime();
-    int diff = pre_date_time.msecsTo(current_date_time);
-    pre_date_time = current_date_time;
-    qDebug()<<" diff:"<<diff;
-    if(diff< 30) return; */
-
     pan = (x-80)*2 + 512;
     tilt = (y-80)*2 + 512;
 
@@ -1996,10 +1932,8 @@ void MainWindow::updateVirtualJoyStick(int x,int y)
 
     if(pan_old != pan || tilt_old != tilt)
     {
-        //qDebug()<<"pan:"<<pan <<" tilt:"<<tilt;
         pan_outVal=updateJoysticktoExpo(pan, mExpo,HID_RESOLUTION,kh);
         tilt_outVal=updateJoysticktoExpo(tilt, mExpo,HID_RESOLUTION,kh);
-        //qDebug()<<"pan_outVal:"<<pan_outVal <<" tilt_outVal:"<<tilt_outVal;
         uint8_t * cmd = mPodCmd.crtSteplessCmd(pan_outVal* ANGLENET2DEG, -(tilt_outVal* ANGLENET2DEG));
         udpskt->write((char *)cmd,7);
 
@@ -2029,11 +1963,8 @@ int MainWindow::updateJoysticktoExpo(int inVal,double expo,int maxVal,int tho)
     {
         return 0;
     }
-
     double a = (val) * (double)1/(double)maxVal;
     double outVal = a*pow(expo,a) * (tho/expo)*sbol;
-    //qDebug()<<"inVal"<<inVal<<" expo"<<expo<<"  maxVal"<<maxVal<<"  outVal"<<outVal <<" a"<<a;
-
     if(outVal>0 && outVal<1) outVal=1;
     else if(outVal>-1 && outVal<0) outVal=-1;
     return (int)outVal;
@@ -2041,9 +1972,6 @@ int MainWindow::updateJoysticktoExpo(int inVal,double expo,int maxVal,int tho)
 
 void MainWindow::slotGetOneFrameCh1(QImage img)
 {
-
-    //QUdpSocket * udpskt = getCurMainPTZ();
-    // 检查连接状态
     if( connectFlag_A == false)
     {
         qDebug()<<"slotGetOneFrameCh1 udpskt is null" <<"   connectFlag_A:"<<connectFlag_A <<"   connectFlag_B:"<<connectFlag_B;
@@ -2055,8 +1983,6 @@ void MainWindow::slotGetOneFrameCh1(QImage img)
         qDebug()<<"slotGetOneFrameCh1 udpskt is null" <<"   connectRtspFlag_A:"<<connectRtspFlag_A <<"   connectFlag_B:"<<connectFlag_B;
         return;
     }
-
-    // 保存当前图像并标记更新
     mImageCh1 = img.copy();
     mImageCh1GetNew = true;
 
@@ -2067,7 +1993,6 @@ void MainWindow::slotGetOneFrameCh1(QImage img)
 
 void MainWindow::slotGetOneFrameCh2(QImage img)
 {
-    //QUdpSocket * udpskt = getCurMainPTZ();
     if( connectFlag_B == false)
     {
         qDebug()<<"slotGetOneFrameCh2 udpskt is null" <<"   connectFlag_A:"<<connectFlag_A <<"   connectFlag_B:"<<connectFlag_B;
@@ -2113,7 +2038,6 @@ void MainWindow::sendSetCmd(int type,int val1,int val2)
     cmd[1]=type;
     cmd[2]= val1;
     cmd[3]= val2;
-    //qDebug()<<"Tilt:"<<y;
     cmd[4]=0;
     cmd[5]=0;
     cmd[6]=0;
@@ -2137,7 +2061,6 @@ void MainWindow::sendSetCmd(int type,int v1,int v2,int v3,int v4)
     cmd[7]=0xff & (cmd[0] + cmd[1]+ cmd[2]+ cmd[3]+ cmd[4]+ cmd[5]+ cmd[6]);
     cmd[8]=0;
     udpskt->write((char *)cmd,8);
-    //qDebug()<<("type=")<<cmd[1]<<" "<<cmd[2]<<" "<<cmd[3]<<" "<<cmd[4]<<" "<<cmd[5];
 }
 
 void MainWindow::sendSetCmd(int type,int panValH,int panValL,int tiltValH,int tiltValL,int hdFocal,int hdZoom,int irFocal,int irZoom)
@@ -2145,7 +2068,6 @@ void MainWindow::sendSetCmd(int type,int panValH,int panValL,int tiltValH,int ti
     unsigned char cmd[10];
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
-
     cmd[0]=PKT_HEADER;
     cmd[1]=type;
     cmd[2]= panValH;
@@ -2156,17 +2078,14 @@ void MainWindow::sendSetCmd(int type,int panValH,int panValL,int tiltValH,int ti
     cmd[7]=0xff & (cmd[0] + cmd[1]+ cmd[2]+ cmd[3]+ cmd[4]+ cmd[5]+ cmd[6]);
     cmd[8]=0;
     udpskt->write((char *)cmd,8);
-    //qDebug()<<("type=")<<cmd[1]<<" "<<cmd[2]<<" "<<cmd[3]<<" "<<cmd[4]<<" "<<cmd[5]<<" "<<cmd[6];
 }
 
 
 void MainWindow::sendSetIP(int type)
 {
     unsigned char cmd[10];
-
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
-
     cmd[0]=PKT_HEADER;
     cmd[1]=type;
     cmd[2]=(cfgIpAddr>>24) & 0xff;
@@ -2202,9 +2121,7 @@ void MainWindow::on_pbStop_pressed()
 {
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
-    //sendSetCmd(PKT_TYPE_PTZSTOP,0);
     ptzCmdStop[6]=0xff & ( ptzCmdStop[1]+ ptzCmdStop[2]+ ptzCmdStop[3]+ ptzCmdStop[4]+ ptzCmdStop[5]);
-    // udpskt->write((char *)ptzCmdStop,sizeof(ptzCmdStop))
     if(connectFlag_A != false)
     {
         udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
@@ -2226,7 +2143,6 @@ void MainWindow::on_pbUp_released()
     if( udpskt == NULL) return;
 
     ptzCmdStop[6]=0xff & ( ptzCmdStop[1]+ ptzCmdStop[2]+ ptzCmdStop[3]+ ptzCmdStop[4]+ ptzCmdStop[5]);
-    // udpskt->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
     if(connectFlag_A != false)
     {
         udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
@@ -2243,7 +2159,6 @@ void MainWindow::on_pbDown_released()
     if( udpskt == NULL) return;
 
     ptzCmdStop[6]=0xff & ( ptzCmdStop[1]+ ptzCmdStop[2]+ ptzCmdStop[3]+ ptzCmdStop[4]+ ptzCmdStop[5]);
-    // udpskt->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
     if(connectFlag_A != false)
     {
         udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
@@ -2260,7 +2175,6 @@ void MainWindow::on_pbLeft_released()
     if( udpskt == NULL) return;
 
     ptzCmdStop[6]=0xff & ( ptzCmdStop[1]+ ptzCmdStop[2]+ ptzCmdStop[3]+ ptzCmdStop[4]+ ptzCmdStop[5]);
-    // udpskt->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
     if(connectFlag_A != false)
     {
         udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
@@ -2269,7 +2183,6 @@ void MainWindow::on_pbLeft_released()
     {
         udpSocket_B->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
     }
-    //qDebug()<<"on_pbLeft_released";
 }
 
 void MainWindow::on_pbRight_released()
@@ -2278,8 +2191,6 @@ void MainWindow::on_pbRight_released()
     if( udpskt == NULL) return;
 
     ptzCmdStop[6]=0xff & ( ptzCmdStop[1]+ ptzCmdStop[2]+ ptzCmdStop[3]+ ptzCmdStop[4]+ ptzCmdStop[5]);
-    // udpskt->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
-    // 同时发送给A和B两个光电
     if(connectFlag_A != false)
     {
         udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
@@ -2288,7 +2199,6 @@ void MainWindow::on_pbRight_released()
     {
         udpSocket_B->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
     }
-    //qDebug()<<"on_pbRight_released";
 }
 
 void MainWindow::on_pbUp_pressed()
@@ -2304,8 +2214,6 @@ void MainWindow::on_pbUp_pressed()
     else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(0,(pelco_spd_val* ANGLENET2DEG));
-//        udpskt->write((char *)cmd,7);
-        // 同时发送给A和B两个光电
         if(connectFlag_A != false)
         {
             udpSocket_A->write((char *)cmd,7);
@@ -2314,8 +2222,6 @@ void MainWindow::on_pbUp_pressed()
         {
             udpSocket_B->write((char *)cmd,7);
         }
-        //qDebug()<<"-(pelco_spd_val* ANGLENET2DEG):"<<-(pelco_spd_val* ANGLENET2DEG) << "-pelco_spd_val* ANGLENET2DEG"<<-pelco_spd_val* ANGLENET2DEG;
-        //qDebug()<<"-(pelco_spd_val*91):"<<-(pelco_spd_val*93) << "-pelco_spd_val*91"<<-pelco_spd_val*93;
     }
 
 }
@@ -2333,8 +2239,6 @@ void MainWindow::on_pbDown_pressed()
     else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(0,-(pelco_spd_val* ANGLENET2DEG));
-//        udpskt->write((char *)cmd,7);
-        // 同时发送给A和B两个光电
         if(connectFlag_A != false)
         {
             udpSocket_A->write((char *)cmd,7);
@@ -2359,9 +2263,6 @@ void MainWindow::on_pbLeft_pressed()
     else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(-(pelco_spd_val* ANGLENET2DEG),0);
-//         udpskt->write((char *)cmd,7);
-
-        // 同时发送给A和B两个光电
         if(connectFlag_A != false)
         {
             udpSocket_A->write((char *)cmd,7);
@@ -2371,14 +2272,6 @@ void MainWindow::on_pbLeft_pressed()
             udpSocket_B->write((char *)cmd,7);
         }
     }
-
-
-
-    /*QByteArray mBuf;
-    mBuf.resize(7);
-    memcpy(mBuf.data(),cmd, 7);
-    qDebug()<<"left:"<<mBuf.toHex(' ');
-    */
 }
 
 void MainWindow::on_pbRight_pressed()
@@ -2395,8 +2288,6 @@ void MainWindow::on_pbRight_pressed()
     else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(pelco_spd_val* ANGLENET2DEG,0);
-//         udpskt->write((char *)cmd,7);
-        // 同时发送给A和B两个光电
         if(connectFlag_A != false)
         {
             udpSocket_A->write((char *)cmd,7);
@@ -2406,10 +2297,6 @@ void MainWindow::on_pbRight_pressed()
             udpSocket_B->write((char *)cmd,7);
         }
     }
-    /*QByteArray mBuf;
-    mBuf.resize(7);
-    memcpy(mBuf.data(),cmd, 7);
-    qDebug()<<"right:"<<mBuf.toHex(' ');*/
 }
 
 void MainWindow::on_pbSetZero_clicked()
@@ -2448,20 +2335,13 @@ int MainWindow::adjFocusPosByDist(QUdpSocket * udpSocket,int dist)
     }
 
     if(t < 1  ) t = 1000;
-    //if(postdist == t ) return 100;
-    //84 01 04 48 0p 0q 0r 0s FF 设置聚焦位置pgrs: 0x1000 ~ 0x8000
-
-
     int focval = ui->leHdaDefFoc->text().toInt();   //4400;//getFocValByDist(t);   //配置中相机A对焦值
-
     hdCmdFocalTo[4] = (focval>>12)&0xf;
     hdCmdFocalTo[5] = (focval>>8)&0xf;
     hdCmdFocalTo[6] = (focval>>4)&0xf;
     hdCmdFocalTo[7] = (focval>>0)&0xf;
     qDebug()<<"adjFocusPosByDist" <<focval;
     udpSocket->write((char *)hdCmdFocalTo ,sizeof(hdCmdFocalTo));
-    // QByteArray cmdData((const char *)hdCmdFocalTo, sizeof(hdCmdFocalTo));
-    // qDebug() << "=============UDP Focal Command:" << cmdData.toHex(' ');  // 打印这里发送的数据
     postdist = t;
 }
 
@@ -2671,8 +2551,6 @@ void MainWindow::on_pbConfigSave_clicked()
 
 void MainWindow::setCtlObjStatus(bool enFlag)
 {
-   // ui->rbSmallTracking->setEnabled(enFlag);
-   // ui->rbDetection->setEnabled(enFlag);
     ui->tabWidConfig->setEnabled(enFlag);
     ui->pbOsdWordSave->setEnabled(enFlag);
     ui->cbxEditLock_sys->setEnabled(enFlag);
@@ -2691,18 +2569,11 @@ void MainWindow::setCtlObjStatus(bool enFlag)
     ui->pbApUp->setEnabled(enFlag);
     ui->pbApDown->setEnabled(enFlag);
     ui->pbToZero->setEnabled(enFlag);
-
-//    ui->cbxBalance->setEnabled(enFlag);
     ui->lblPadDirection->setEnabled(enFlag);
     ui->lblPadDirection_B->setEnabled(enFlag);
-    //ui->gridLayout_Theo->setEnabled(enFlag);
     ui->rb_trackStick->setEnabled(enFlag);
-    //ui->rb_trackTable->setEnabled(enFlag);
     ui->rb_Center->setEnabled(enFlag);
-    //ui->rb_toZero->setEnabled(enFlag);
     ui->rb_Tracking->setEnabled(enFlag);
-
-
     ui->rb_trackRoi10->setEnabled(enFlag);
     ui->rb_trackRoi20->setEnabled(enFlag);
     ui->rb_trackRoi40->setEnabled(enFlag);
@@ -2734,8 +2605,6 @@ void MainWindow::on_cbxEditLock_sys_stateChanged(int arg1)
     {
         ui->leRecFileDir->setEnabled(false);
         ui->leSetIP->setEnabled(false);
-        //ui->leSetIPMask->setEnabled(false);
-        //ui->leSetIPGageway->setEnabled(false);
         ui->pbConfigSave->setEnabled(false);
         ui->leSetHdCamIP->setEnabled(false);
         ui->leSetHdCamPort->setEnabled(false);
@@ -3117,12 +2986,10 @@ void MainWindow::on_le_setPitch_returnPressed()
 
 void MainWindow::slotGetSigBackToMainWin()
 {
-   // if(connectFlag == true)
     {
         mPlayer->runflag=false;
         fullscreen.close();
     }
-    //delete(mPlayer);
 }
 
 void MainWindow::slotGetUpdateJoystick()
@@ -3237,8 +3104,6 @@ int MainWindow::convToRadarAE(double * outRadarPan,double * outRadarTilt, double
     // 球坐标转直角坐标
     double horDistance = (inDistance) * cos(radTiltVal);    //求到光电的水平距离
     double vertDistance = (inDistance) * sin(radTiltVal);    //求垂直距离
-    //qDebug()<<"horDistance:"<<horDistance <<"vertDistance:"<<vertDistance;
-
     double MuBiaoWeiZhiX = 0;   //以基座为原点的xyz
     double MuBiaoWeiZhiY = 0;
     double MuBiaoWeiZhiZ = 0;
@@ -3487,7 +3352,6 @@ on_pbStop_pressed();
         S9ToAngle[6]=0xff & ( S9ToAngle[1]+ S9ToAngle[2]+ S9ToAngle[3]+ S9ToAngle[4]+ S9ToAngle[5]);
          udpSocket_B->write((char *)S9ToAngle ,sizeof(S9ToAngle));
     }
-    //qDebug()<<("goto angle=")<<direction<<" "<<pitch;
     return 0;
 }
 
@@ -3558,7 +3422,6 @@ void MainWindow::on_rb_trackStick_clicked()
 {
     pnetworkComm->msgToZhiKong.status = 0;
     operateMode = OPMODE_STICK;
-//    sendSetCmd(PKT_TYPE_PTZSTOP,0);
     if(connectFlag_A != false)
     {
         udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
@@ -3587,9 +3450,6 @@ void MainWindow::on_rb_toZero_clicked()
     udpskt->write((char *)S9ToZero ,sizeof(S9ToZero));
 
     operateMode=OPMODE_TOZERO;
-
-    //on_rb_HGyroUnLock_clicked();
-    //ui->rb_HGyroUnLock->setChecked(true);
 }
 
 void MainWindow::on_rb_Tracking_clicked()
@@ -3607,14 +3467,10 @@ void MainWindow::on_rb_Center_clicked()
 }
 
 void MainWindow::on_rb_KcfMarking_clicked()
-{qDebug()<<"on_rb_KcfMarking_clicked";
+{
+    qDebug()<<"on_rb_KcfMarking_clicked";
     operateMode = OPMODE_MARKING;
     ui->lblPad->setCursor(Qt::ArrowCursor);
-/*    if(1 == btnStatus)
-    {
-        btnStatus = 2;
-        sendCmd();
-    }*/
 }
 
 void MainWindow::on_rb_TopHatMarking_clicked()
@@ -3656,8 +3512,6 @@ bool MainWindow::openSerialPort()
         SerialPort.setFlowControl(QSerialPort::NoFlowControl);//设置流控制（无）
         mnBufIdx=0;
         mbCenterAsk=false;
-
-        //connect(&this->SerialPort,SIGNAL(readyRead()),this,SLOT(recvComData()));
         if(SerialPort.open(QIODevice::WriteOnly))   //打开串口，并设置串口为只读模式
         {
             mpSendBuf=new char[sizeof(CommFrame)];
@@ -3696,12 +3550,6 @@ int MainWindow::recvComData()
 
     mzRecvBuf.append(SerialPort.readAll());
     int nLen=mzRecvBuf.length();
-
-//	QString sTmp;
-//	for (int i=0; i<nLen; ++i)
-//		sTmp.append(QString(" %1").arg(uchar(mzRecvBuf.at(i)), 2, 16, QChar('0')));
-//	ui->lblInfo->setText(QString::number(nLen) +":" + sTmp);//Debug
-
     if (nLen<(int)sizeof(CommFrame))
         return -1;
     bool bSucEver=false;//在下面的解析循环中是否成功过
@@ -3796,20 +3644,11 @@ bool MainWindow::ParseCommData(int nIdx)
 int MainWindow::sendServoComm(double dblGd1A, double dblGd1E,double dblGd2A, double dblGd2E,int coverflag)
 {
     if(pnetworkComm->servo422ConnectFlag == false)  return 100;
-
-    //unsigned int loopno = pnetworkComm->msgToServo422.loopNo;
-
     pnetworkComm->msgToServo422.loopNo++;
     pnetworkComm->msgToServo422.gd1FangWei.fData = dblGd1A;
     pnetworkComm->msgToServo422.gd1FuYang.fData = dblGd1E;
     pnetworkComm->msgToServo422.gd2FangWei.fData = dblGd2A;
     pnetworkComm->msgToServo422.gd2FuYang.fData = dblGd2E;
-
-
-    /*pnetworkComm->msgToServo422.gd1FangWei.fData = 123.12; //0x01020304;
-    pnetworkComm->msgToServo422.gd1FuYang.fData = 23.23;    //0x0a0b0c0d;
-    pnetworkComm->msgToServo422.gd2FangWei.fData = 123.12; //0x01020304;
-    pnetworkComm->msgToServo422.gd2FuYang.fData = 56.56;  //0x0a0b0c0d;*/
     pnetworkComm->convComm422PktToByte();
     pnetworkComm->sendServoPktCnt++;
     SerialPort.write((char *)pnetworkComm->pktToServo422, sizeof(pnetworkComm->pktToServo422));
@@ -3833,7 +3672,6 @@ void MainWindow::on_rb_StickSpeedL_clicked()
 
 void MainWindow::timerRecFileSeg_timeOut()
 {
-    // 每3分钟分段录像
     if( connectFlag_A == false ||connectFlag_B == false ) return;
 
     if(mPlayer->recflag == true)
@@ -3876,12 +3714,10 @@ void MainWindow::on_leCenterCom_textChanged(const QString &arg1)
 
 void MainWindow::on_sldVidEnhance_valueChanged(int value)
 {
-    //ui->lbVidEnhanceVal->setText(QString::number(value));
 }
 
 void MainWindow::on_sldVidBright_valueChanged(int value)
 {
-    //ui->lbVidBrightVal->setText(QString::number(value));
 }
 
 void MainWindow::on_cbxDispOSDTime_clicked(bool checked)
@@ -4065,8 +3901,6 @@ void MainWindow::chkIfOffline_timeOut()
         connectGyroBc();
     }
     recvGyroPktNum_last = pGyroComm->recvPacketCnt;
-
-    //autoAdjZoomFocal(roiBox.width); //在跟踪时自动变焦调整视场角
     return;
 }
 
@@ -4086,10 +3920,6 @@ void MainWindow::zhiKongSocket_timeOut()
 
 
     distance = pnetworkComm->msgFromZhiKong.zkDistence;
-
-//    qDebug() << "zkDistence:" << distance << "m, 时间:"
-//             << QDateTime::currentDateTime().toString("hh:mm:ss.zzz");
-
     if(ui->cbxSetDbgDistance->isChecked())  //调试或者校标用
     {
         distance = ui->leSetDbgDistance->text().toDouble();
@@ -4112,7 +3942,6 @@ void MainWindow::zhiKongSocket_timeOut()
         gd2ToRadarA = mPtzDirection_B;
         gd2ToRadarE = mPtzPitch_B;
     }
-//gd1ToRadarE = gd1ToRadarE -1;
     // 通过串口发送给天线伺服系统
     sendServoComm(gd1ToRadarA,gd1ToRadarE, gd2ToRadarA,gd2ToRadarE,0);
 
@@ -4230,8 +4059,6 @@ void MainWindow::on_pbDbgSend_clicked()
     if( udpskt == NULL) return;
 
     QByteArray array = QByteArray::fromHex(ui->le_dbgSend->text().toLatin1());
-
-    //qDebug()<<" cmd:"<<"  barr:"<<array.toHex(' ')<<"   lenth:"<<array.length();
     for(int i=0;i<array.length();i++)
     {
         blkCmd[i] = array.data()[i];
@@ -4276,7 +4103,6 @@ void MainWindow::on_pbExpUp_clicked()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
     udpskt->write((char *)hdExpoCompAdd ,sizeof(hdExpoCompAdd));
-    //udpSocket->write((char *)hdGainAdd ,sizeof(hdGainAdd));
 }
 
 void MainWindow::on_pbExpDown_clicked()
@@ -4284,7 +4110,6 @@ void MainWindow::on_pbExpDown_clicked()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
     udpskt->write((char *)hdExpoCompDec ,sizeof(hdExpoCompDec));
-    //udpSocket->write((char *)hdGainDec ,sizeof(hdGainDec));
 }
 
 void MainWindow::on_pbExpReset_clicked()
@@ -4292,7 +4117,6 @@ void MainWindow::on_pbExpReset_clicked()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
     udpskt->write((char *)hdExpoCompReset ,sizeof(hdExpoCompReset));
-    //udpSocket->write((char *)hdGainReset ,sizeof(hdGainReset));
 }
 
 void MainWindow::on_rb_flipPicOff_clicked()
@@ -4421,11 +4245,9 @@ void MainWindow::on_cbx_backLightMode_currentIndexChanged(int index)
 
 void MainWindow::on_pbSetDirection_clicked()
 {
-// #if 0
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
     udpskt->write((char *)S9ResetDirection ,sizeof(S9ResetDirection));
-// #endif
 }
 
 void MainWindow::on_pbSetPitch_clicked()
@@ -4507,7 +4329,6 @@ void MainWindow::on_pbToZero_clicked()
     {
         udpSocket_B->write((char *)S9ToZero ,sizeof(S9ToZero));
     }
-    //operateMode=OPMODE_STICK;
 }
 
 void MainWindow::on_vsld_SetBeiShu_valueChanged(int value)
@@ -4528,9 +4349,6 @@ void MainWindow::on_vsld_SetBeiShu_valueChanged(int value)
 
 void MainWindow::on_pbDbgSendBorderChk_clicked()
 {
-    //ui->rb_selGDB->setChecked(true);
-    //qDebug()<<"A:"<<ui->rb_selGDA->isChecked()<<"   B:"<<ui->rb_selGDB->isChecked();
-
     mPtzDirection_A =  QString(ui->leTestPan->text()).toDouble();
     mPtzDirection_B =  QString(ui->leTestTilt->text()).toDouble();
     chkCrossBorder();
@@ -4538,18 +4356,15 @@ void MainWindow::on_pbDbgSendBorderChk_clicked()
 
 void MainWindow::on_rb_SelDetectNone_clicked()
 {
-
     ui->cbxStartTracking->setChecked(false);
 }
 
 void MainWindow::on_rb_SelDetectMtd1_clicked()
 {
-
 }
 
 void MainWindow::on_rb_SelDetectMtd2_clicked()
 {
-
 }
 
 //原文链接：https://blog.csdn.net/Y_Bingo/article/details/90345601
@@ -4610,14 +4425,7 @@ void MainWindow::on_pbcalcBlh2Rae_clicked()
     mCoordTrsr.Init(msStationGdcType, mvStationBlh);
 
     QVector3D vBlh;
-
     vBlh = QVector3D((float)poleWeiDu, (float)poleJingDu, (float)poleSiteGaoDu);
-    //QVector3D vRAE = mCoordTrsr.XyzEcef2Rae(vXyz);
-    /*QVector3D vRAE = mCoordTrsr.Blh_Blh_2Rae(vBlh);
-
-    mCenterGuide.dblR=vRAE.x();
-    mCenterGuide.dblA=vRAE.y();
-    mCenterGuide.dblE=vRAE.z(); */
     double x_mb=0,y_mb=0,z_mb=0;
 
     //大地BLH转地心系
@@ -4705,7 +4513,6 @@ void MainWindow::on_cbxStartTracking_stateChanged(int arg1)
         }
         else
         {
-//            sendSetCmd(PKT_TYPE_PTZSTOP,0);
             if(connectFlag_A != false)
             {
                 udpSocket_A->write((char *)ptzCmdStop,sizeof(ptzCmdStop));
@@ -4732,16 +4539,13 @@ void MainWindow::on_rb_DefogOn_clicked()
 
 void MainWindow::quitAndShutdown()
 {
-    //system("shutdown -f -p");
     sendPosition(225.0, -20.0,true,false);
     sendPosition(45.0, -20.0,false,true);
     QThread::msleep(500);
     QProcess process(this);
     QString  str = "C:/WINDOWS/system32/shutdown.exe -f -p";
     process.startDetached(str);
-    //process.start(str);       //会随process close 而退出
     qDebug()<<"process:"<<str;
-    //QThread::msleep(1*1000);
     this->close();
 }
 

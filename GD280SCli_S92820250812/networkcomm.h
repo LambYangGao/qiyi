@@ -59,26 +59,6 @@ typedef struct PktToZhiKong_s {
     uint16_t crc;               //校验字，除校验字外所有字节之和的低十六位
 }stPktToZhiKong;
 
-//typedef struct PktFromZhiKong_s {
-//    uint8_t sId;                //0x5a 发送设备Id
-//    uint8_t destId;             //0x47 接收设备Id
-//    uint8_t pktType;            //填0
-//    uint8_t pktLen;             //报文长度，共16字节
-
-//    uint8_t cmdId;             /*   0：停止
-//                                    1：引导光电设备
-//                                    2：备用
-//                                     */
-//    uint8_t startTracking;      //bit0:是否启动跟踪，bit1~2:识别算法选择
-//    uint16_t zkFangWei;         //引导方位信息
-//    uint16_t zkFuYang;          //引导俯仰信息
-//    uint16_t zkDistence;        //距离， 量化 0.1米
-
-//    uint8_t zkBianBeiDuiJiao;   //保留
-//    uint8_t res;                //保留
-//    uint16_t crc;               //校验字，除校验字外所有字节之和的低十六位,低字节在前
-//}stPktFromZhiKong;
-
 typedef struct PktFromZhiKong_s {
     uint8_t sId;                //0x5a 发送设备Id
     uint8_t destId;             //0x47 接收设备Id
@@ -345,7 +325,7 @@ public:
     QHostAddress mPeerAddress;//单播地址
     int mPeerPort;  //单播Port
 
-    //stPkt sendPkt;
+
     stPktFromPC sendPkt;
     QTimer * timerTest;  //定时器
 
