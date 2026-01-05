@@ -14,7 +14,6 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QCheckBox>
-#include <QtWidgets/QComboBox>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QGroupBox>
 #include <QtWidgets/QHBoxLayout>
@@ -26,8 +25,6 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QRadioButton>
 #include <QtWidgets/QSlider>
-#include <QtWidgets/QSpinBox>
-#include <QtWidgets/QSplitter>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QTabWidget>
 #include <QtWidgets/QTextEdit>
@@ -163,47 +160,18 @@ public:
     QLabel *lbl_lensTitle_12;
     QWidget *tab_4;
     QGroupBox *groupBox;
-    QRadioButton *rb_ExpoIris;
-    QRadioButton *rb_ExpoManual;
     QRadioButton *rb_ExpoAuto;
-    QRadioButton *rb_ExpoShutter;
     QGroupBox *gbx_WB;
-    QComboBox *cbx_WbMode;
     QGroupBox *gbx_Sharpen;
-    QPushButton *pbSharpenReset;
-    QPushButton *pbSharpenDown;
-    QPushButton *pbSharpenUp;
     QGroupBox *gbx_Gamma;
-    QSpinBox *spb_Gamma;
     QGroupBox *gbx_Expo;
-    QPushButton *pbExpDown;
-    QPushButton *pbExpUp;
-    QPushButton *pbExpReset;
     QGroupBox *gbx_backLight;
-    QPushButton *pbBackLightSend;
-    QComboBox *cbx_backLightMode;
-    QSpinBox *sbx_cbx_backLightVal;
     QGroupBox *gbx_Expo_2;
-    QPushButton *pbApReset;
-    QPushButton *pbApDown;
-    QPushButton *pbApUp;
     QGroupBox *gbx_Shutter;
-    QPushButton *pbShutterReset;
-    QPushButton *pbApShutterDown;
-    QPushButton *pbShutterUp;
     QGroupBox *gbx_PicFlip;
-    QRadioButton *rb_flipPicOff;
-    QRadioButton *rb_flipPicOn;
     QGroupBox *gbx_PicFlip_2;
-    QRadioButton *rb_DefogOff;
-    QRadioButton *rb_DefogOn;
     QWidget *tab;
-    QPushButton *pbOsdWordSave;
     QGroupBox *gbxPalSelect_8;
-    QComboBox *cbxOSDFontSize;
-    QComboBox *cbxOSDFont;
-    QLabel *lblCurrentPos_22;
-    QLabel *lblCurrentPos_23;
     QGroupBox *groupBox_9;
     QCheckBox *cbxCrosser;
     QCheckBox *cbxFullScreen;
@@ -277,25 +245,6 @@ public:
     QLabel *label_10;
     QLineEdit *le_setPitch;
     QPushButton *pbSendDirection;
-    QGroupBox *groupBox_3;
-    QLabel *label_2;
-    QLabel *label_4;
-    QLabel *label_7;
-    QLabel *label_8;
-    QLabel *lblPadDirection;
-    QGroupBox *groupBox_8;
-    QLabel *label_11;
-    QLabel *label_12;
-    QLabel *label_13;
-    QLabel *label_14;
-    QLabel *lblPadDirection_B;
-    QGroupBox *groupBox_21;
-    QPushButton *pbAdjDriftDown;
-    QPushButton *pbAdjDriftUp;
-    QPushButton *pbAAdjDriftSave;
-    QPushButton *pbAdjDriftLeft;
-    QPushButton *pbAdjDriftRight;
-    QPushButton *pbAdjDriftStop;
     QWidget *tab_8;
     QGroupBox *groupBox_4;
     QLabel *lblCurrentPos_15;
@@ -339,29 +288,6 @@ public:
     QCheckBox *cbxUseDefFocB;
     QPushButton *pbConfigSave;
     QCheckBox *cbxEditLock_sys;
-    QGroupBox *groupBox_17;
-    QLabel *lblCurrentPos_28;
-    QLabel *lblCurrentPos_29;
-    QLabel *lblCurrentPos_30;
-    QLabel *lblCurrentPos_31;
-    QLabel *lblCurrentPos_32;
-    QLabel *lblCurrentPos_33;
-    QSplitter *splitter;
-    QLineEdit *lePid_X_Scale;
-    QLineEdit *lePid_X_P;
-    QLineEdit *lePid_X_I;
-    QLineEdit *lePid_X_D;
-    QSplitter *splitter_2;
-    QLineEdit *lePid_Y_Scale;
-    QLineEdit *lePid_Y_P;
-    QLineEdit *lePid_Y_I;
-    QLineEdit *lePid_Y_D;
-    QLineEdit *lePidMaxOut;
-    QLabel *lblMaxOut;
-    QLabel *lblMinOut;
-    QLineEdit *lePidMinOut;
-    QLabel *lblDefaultSpeed;
-    QLineEdit *lePtzDefSpeed;
     QGroupBox *groupBox_10;
     QLineEdit *leGd1InstallX;
     QLineEdit *leGd1InstallY;
@@ -1680,20 +1606,6 @@ public:
         groupBox->setObjectName(QStringLiteral("groupBox"));
         groupBox->setGeometry(QRect(10, 0, 441, 391));
         groupBox->setFont(font1);
-        rb_ExpoIris = new QRadioButton(groupBox);
-        rb_ExpoIris->setObjectName(QStringLiteral("rb_ExpoIris"));
-        rb_ExpoIris->setEnabled(true);
-        rb_ExpoIris->setGeometry(QRect(10, 109, 101, 21));
-        sizePolicy3.setHeightForWidth(rb_ExpoIris->sizePolicy().hasHeightForWidth());
-        rb_ExpoIris->setSizePolicy(sizePolicy3);
-        rb_ExpoIris->setFont(font4);
-        rb_ExpoManual = new QRadioButton(groupBox);
-        rb_ExpoManual->setObjectName(QStringLiteral("rb_ExpoManual"));
-        rb_ExpoManual->setEnabled(true);
-        rb_ExpoManual->setGeometry(QRect(10, 59, 81, 21));
-        sizePolicy3.setHeightForWidth(rb_ExpoManual->sizePolicy().hasHeightForWidth());
-        rb_ExpoManual->setSizePolicy(sizePolicy3);
-        rb_ExpoManual->setFont(font4);
         rb_ExpoAuto = new QRadioButton(groupBox);
         rb_ExpoAuto->setObjectName(QStringLiteral("rb_ExpoAuto"));
         rb_ExpoAuto->setEnabled(true);
@@ -1702,13 +1614,6 @@ public:
         rb_ExpoAuto->setSizePolicy(sizePolicy3);
         rb_ExpoAuto->setFont(font4);
         rb_ExpoAuto->setChecked(true);
-        rb_ExpoShutter = new QRadioButton(groupBox);
-        rb_ExpoShutter->setObjectName(QStringLiteral("rb_ExpoShutter"));
-        rb_ExpoShutter->setEnabled(true);
-        rb_ExpoShutter->setGeometry(QRect(10, 84, 101, 21));
-        sizePolicy3.setHeightForWidth(rb_ExpoShutter->sizePolicy().hasHeightForWidth());
-        rb_ExpoShutter->setSizePolicy(sizePolicy3);
-        rb_ExpoShutter->setFont(font4);
         gbx_WB = new QGroupBox(groupBox);
         gbx_WB->setObjectName(QStringLiteral("gbx_WB"));
         gbx_WB->setGeometry(QRect(26, 310, 90, 71));
@@ -1717,12 +1622,6 @@ public:
         gbx_WB->setMinimumSize(QSize(90, 60));
         gbx_WB->setMaximumSize(QSize(90, 300));
         gbx_WB->setFont(font1);
-        cbx_WbMode = new QComboBox(gbx_WB);
-        cbx_WbMode->setObjectName(QStringLiteral("cbx_WbMode"));
-        cbx_WbMode->setGeometry(QRect(4, 30, 81, 30));
-        cbx_WbMode->setFont(font1);
-        cbx_WbMode->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
         gbx_Sharpen = new QGroupBox(groupBox);
         gbx_Sharpen->setObjectName(QStringLiteral("gbx_Sharpen"));
         gbx_Sharpen->setGeometry(QRect(25, 155, 90, 141));
@@ -1731,39 +1630,6 @@ public:
         gbx_Sharpen->setMinimumSize(QSize(90, 130));
         gbx_Sharpen->setMaximumSize(QSize(90, 300));
         gbx_Sharpen->setFont(font1);
-        pbSharpenReset = new QPushButton(gbx_Sharpen);
-        pbSharpenReset->setObjectName(QStringLiteral("pbSharpenReset"));
-        pbSharpenReset->setGeometry(QRect(16, 102, 70, 30));
-        sizePolicy3.setHeightForWidth(pbSharpenReset->sizePolicy().hasHeightForWidth());
-        pbSharpenReset->setSizePolicy(sizePolicy3);
-        pbSharpenReset->setMinimumSize(QSize(70, 30));
-        pbSharpenReset->setMaximumSize(QSize(70, 30));
-        pbSharpenReset->setFont(font2);
-        pbSharpenReset->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbSharpenDown = new QPushButton(gbx_Sharpen);
-        pbSharpenDown->setObjectName(QStringLiteral("pbSharpenDown"));
-        pbSharpenDown->setGeometry(QRect(17, 67, 70, 30));
-        sizePolicy3.setHeightForWidth(pbSharpenDown->sizePolicy().hasHeightForWidth());
-        pbSharpenDown->setSizePolicy(sizePolicy3);
-        pbSharpenDown->setMinimumSize(QSize(70, 30));
-        pbSharpenDown->setMaximumSize(QSize(70, 30));
-        pbSharpenDown->setFont(font2);
-        pbSharpenDown->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbSharpenUp = new QPushButton(gbx_Sharpen);
-        pbSharpenUp->setObjectName(QStringLiteral("pbSharpenUp"));
-        pbSharpenUp->setGeometry(QRect(17, 33, 70, 30));
-        sizePolicy3.setHeightForWidth(pbSharpenUp->sizePolicy().hasHeightForWidth());
-        pbSharpenUp->setSizePolicy(sizePolicy3);
-        pbSharpenUp->setMinimumSize(QSize(70, 30));
-        pbSharpenUp->setMaximumSize(QSize(70, 30));
-        pbSharpenUp->setFont(font2);
-        pbSharpenUp->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
         gbx_Gamma = new QGroupBox(groupBox);
         gbx_Gamma->setObjectName(QStringLiteral("gbx_Gamma"));
         gbx_Gamma->setGeometry(QRect(132, 310, 90, 71));
@@ -1772,13 +1638,6 @@ public:
         gbx_Gamma->setMinimumSize(QSize(90, 60));
         gbx_Gamma->setMaximumSize(QSize(90, 300));
         gbx_Gamma->setFont(font1);
-        spb_Gamma = new QSpinBox(gbx_Gamma);
-        spb_Gamma->setObjectName(QStringLiteral("spb_Gamma"));
-        spb_Gamma->setGeometry(QRect(11, 34, 71, 22));
-        spb_Gamma->setFont(font3);
-        spb_Gamma->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        spb_Gamma->setMaximum(15);
         gbx_Expo = new QGroupBox(groupBox);
         gbx_Expo->setObjectName(QStringLiteral("gbx_Expo"));
         gbx_Expo->setGeometry(QRect(131, 10, 90, 131));
@@ -1787,39 +1646,6 @@ public:
         gbx_Expo->setMinimumSize(QSize(90, 60));
         gbx_Expo->setMaximumSize(QSize(90, 300));
         gbx_Expo->setFont(font1);
-        pbExpDown = new QPushButton(gbx_Expo);
-        pbExpDown->setObjectName(QStringLiteral("pbExpDown"));
-        pbExpDown->setGeometry(QRect(13, 55, 70, 30));
-        sizePolicy3.setHeightForWidth(pbExpDown->sizePolicy().hasHeightForWidth());
-        pbExpDown->setSizePolicy(sizePolicy3);
-        pbExpDown->setMinimumSize(QSize(70, 30));
-        pbExpDown->setMaximumSize(QSize(70, 30));
-        pbExpDown->setFont(font2);
-        pbExpDown->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbExpUp = new QPushButton(gbx_Expo);
-        pbExpUp->setObjectName(QStringLiteral("pbExpUp"));
-        pbExpUp->setGeometry(QRect(13, 21, 70, 30));
-        sizePolicy3.setHeightForWidth(pbExpUp->sizePolicy().hasHeightForWidth());
-        pbExpUp->setSizePolicy(sizePolicy3);
-        pbExpUp->setMinimumSize(QSize(70, 30));
-        pbExpUp->setMaximumSize(QSize(70, 30));
-        pbExpUp->setFont(font2);
-        pbExpUp->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbExpReset = new QPushButton(gbx_Expo);
-        pbExpReset->setObjectName(QStringLiteral("pbExpReset"));
-        pbExpReset->setGeometry(QRect(13, 90, 70, 30));
-        sizePolicy3.setHeightForWidth(pbExpReset->sizePolicy().hasHeightForWidth());
-        pbExpReset->setSizePolicy(sizePolicy3);
-        pbExpReset->setMinimumSize(QSize(70, 30));
-        pbExpReset->setMaximumSize(QSize(70, 30));
-        pbExpReset->setFont(font2);
-        pbExpReset->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
         gbx_backLight = new QGroupBox(groupBox);
         gbx_backLight->setObjectName(QStringLiteral("gbx_backLight"));
         gbx_backLight->setGeometry(QRect(238, 155, 90, 141));
@@ -1828,31 +1654,6 @@ public:
         gbx_backLight->setMinimumSize(QSize(90, 60));
         gbx_backLight->setMaximumSize(QSize(90, 300));
         gbx_backLight->setFont(font1);
-        pbBackLightSend = new QPushButton(gbx_backLight);
-        pbBackLightSend->setObjectName(QStringLiteral("pbBackLightSend"));
-        pbBackLightSend->setGeometry(QRect(10, 106, 70, 30));
-        sizePolicy3.setHeightForWidth(pbBackLightSend->sizePolicy().hasHeightForWidth());
-        pbBackLightSend->setSizePolicy(sizePolicy3);
-        pbBackLightSend->setMinimumSize(QSize(70, 30));
-        pbBackLightSend->setMaximumSize(QSize(70, 30));
-        pbBackLightSend->setFont(font2);
-        pbBackLightSend->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        cbx_backLightMode = new QComboBox(gbx_backLight);
-        cbx_backLightMode->setObjectName(QStringLiteral("cbx_backLightMode"));
-        cbx_backLightMode->setGeometry(QRect(10, 32, 71, 30));
-        cbx_backLightMode->setFont(font2);
-        cbx_backLightMode->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        sbx_cbx_backLightVal = new QSpinBox(gbx_backLight);
-        sbx_cbx_backLightVal->setObjectName(QStringLiteral("sbx_cbx_backLightVal"));
-        sbx_cbx_backLightVal->setGeometry(QRect(10, 68, 71, 30));
-        sbx_cbx_backLightVal->setFont(font2);
-        sbx_cbx_backLightVal->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        sbx_cbx_backLightVal->setMaximum(100);
-        sbx_cbx_backLightVal->setValue(50);
         gbx_Expo_2 = new QGroupBox(groupBox);
         gbx_Expo_2->setObjectName(QStringLiteral("gbx_Expo_2"));
         gbx_Expo_2->setGeometry(QRect(238, 10, 90, 131));
@@ -1861,39 +1662,6 @@ public:
         gbx_Expo_2->setMinimumSize(QSize(90, 130));
         gbx_Expo_2->setMaximumSize(QSize(90, 300));
         gbx_Expo_2->setFont(font1);
-        pbApReset = new QPushButton(gbx_Expo_2);
-        pbApReset->setObjectName(QStringLiteral("pbApReset"));
-        pbApReset->setGeometry(QRect(15, 90, 70, 30));
-        sizePolicy3.setHeightForWidth(pbApReset->sizePolicy().hasHeightForWidth());
-        pbApReset->setSizePolicy(sizePolicy3);
-        pbApReset->setMinimumSize(QSize(70, 30));
-        pbApReset->setMaximumSize(QSize(70, 30));
-        pbApReset->setFont(font2);
-        pbApReset->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbApDown = new QPushButton(gbx_Expo_2);
-        pbApDown->setObjectName(QStringLiteral("pbApDown"));
-        pbApDown->setGeometry(QRect(16, 55, 70, 30));
-        sizePolicy3.setHeightForWidth(pbApDown->sizePolicy().hasHeightForWidth());
-        pbApDown->setSizePolicy(sizePolicy3);
-        pbApDown->setMinimumSize(QSize(70, 30));
-        pbApDown->setMaximumSize(QSize(70, 30));
-        pbApDown->setFont(font2);
-        pbApDown->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbApUp = new QPushButton(gbx_Expo_2);
-        pbApUp->setObjectName(QStringLiteral("pbApUp"));
-        pbApUp->setGeometry(QRect(16, 21, 70, 30));
-        sizePolicy3.setHeightForWidth(pbApUp->sizePolicy().hasHeightForWidth());
-        pbApUp->setSizePolicy(sizePolicy3);
-        pbApUp->setMinimumSize(QSize(70, 30));
-        pbApUp->setMaximumSize(QSize(70, 30));
-        pbApUp->setFont(font2);
-        pbApUp->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
         gbx_Shutter = new QGroupBox(groupBox);
         gbx_Shutter->setObjectName(QStringLiteral("gbx_Shutter"));
         gbx_Shutter->setGeometry(QRect(131, 155, 90, 141));
@@ -1902,39 +1670,6 @@ public:
         gbx_Shutter->setMinimumSize(QSize(90, 130));
         gbx_Shutter->setMaximumSize(QSize(90, 300));
         gbx_Shutter->setFont(font1);
-        pbShutterReset = new QPushButton(gbx_Shutter);
-        pbShutterReset->setObjectName(QStringLiteral("pbShutterReset"));
-        pbShutterReset->setGeometry(QRect(10, 103, 70, 30));
-        sizePolicy3.setHeightForWidth(pbShutterReset->sizePolicy().hasHeightForWidth());
-        pbShutterReset->setSizePolicy(sizePolicy3);
-        pbShutterReset->setMinimumSize(QSize(70, 30));
-        pbShutterReset->setMaximumSize(QSize(70, 30));
-        pbShutterReset->setFont(font2);
-        pbShutterReset->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbApShutterDown = new QPushButton(gbx_Shutter);
-        pbApShutterDown->setObjectName(QStringLiteral("pbApShutterDown"));
-        pbApShutterDown->setGeometry(QRect(11, 68, 70, 30));
-        sizePolicy3.setHeightForWidth(pbApShutterDown->sizePolicy().hasHeightForWidth());
-        pbApShutterDown->setSizePolicy(sizePolicy3);
-        pbApShutterDown->setMinimumSize(QSize(70, 30));
-        pbApShutterDown->setMaximumSize(QSize(70, 30));
-        pbApShutterDown->setFont(font2);
-        pbApShutterDown->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbShutterUp = new QPushButton(gbx_Shutter);
-        pbShutterUp->setObjectName(QStringLiteral("pbShutterUp"));
-        pbShutterUp->setGeometry(QRect(11, 34, 70, 30));
-        sizePolicy3.setHeightForWidth(pbShutterUp->sizePolicy().hasHeightForWidth());
-        pbShutterUp->setSizePolicy(sizePolicy3);
-        pbShutterUp->setMinimumSize(QSize(70, 30));
-        pbShutterUp->setMaximumSize(QSize(70, 30));
-        pbShutterUp->setFont(font2);
-        pbShutterUp->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
         gbx_PicFlip = new QGroupBox(groupBox);
         gbx_PicFlip->setObjectName(QStringLiteral("gbx_PicFlip"));
         gbx_PicFlip->setGeometry(QRect(238, 310, 90, 71));
@@ -1943,24 +1678,6 @@ public:
         gbx_PicFlip->setMinimumSize(QSize(90, 71));
         gbx_PicFlip->setMaximumSize(QSize(90, 61));
         gbx_PicFlip->setFont(font1);
-        rb_flipPicOff = new QRadioButton(gbx_PicFlip);
-        rb_flipPicOff->setObjectName(QStringLiteral("rb_flipPicOff"));
-        rb_flipPicOff->setGeometry(QRect(15, 23, 50, 21));
-        sizePolicy3.setHeightForWidth(rb_flipPicOff->sizePolicy().hasHeightForWidth());
-        rb_flipPicOff->setSizePolicy(sizePolicy3);
-        rb_flipPicOff->setMinimumSize(QSize(50, 0));
-        rb_flipPicOff->setMaximumSize(QSize(50, 16777215));
-        rb_flipPicOff->setFont(font4);
-        rb_flipPicOff->setChecked(true);
-        rb_flipPicOn = new QRadioButton(gbx_PicFlip);
-        rb_flipPicOn->setObjectName(QStringLiteral("rb_flipPicOn"));
-        rb_flipPicOn->setEnabled(true);
-        rb_flipPicOn->setGeometry(QRect(15, 43, 50, 21));
-        sizePolicy3.setHeightForWidth(rb_flipPicOn->sizePolicy().hasHeightForWidth());
-        rb_flipPicOn->setSizePolicy(sizePolicy3);
-        rb_flipPicOn->setMinimumSize(QSize(50, 0));
-        rb_flipPicOn->setMaximumSize(QSize(50, 16777215));
-        rb_flipPicOn->setFont(font4);
         gbx_PicFlip_2 = new QGroupBox(groupBox);
         gbx_PicFlip_2->setObjectName(QStringLiteral("gbx_PicFlip_2"));
         gbx_PicFlip_2->setGeometry(QRect(340, 310, 90, 71));
@@ -1969,59 +1686,16 @@ public:
         gbx_PicFlip_2->setMinimumSize(QSize(90, 71));
         gbx_PicFlip_2->setMaximumSize(QSize(90, 61));
         gbx_PicFlip_2->setFont(font1);
-        rb_DefogOff = new QRadioButton(gbx_PicFlip_2);
-        rb_DefogOff->setObjectName(QStringLiteral("rb_DefogOff"));
-        rb_DefogOff->setGeometry(QRect(15, 23, 50, 21));
-        sizePolicy3.setHeightForWidth(rb_DefogOff->sizePolicy().hasHeightForWidth());
-        rb_DefogOff->setSizePolicy(sizePolicy3);
-        rb_DefogOff->setMinimumSize(QSize(50, 0));
-        rb_DefogOff->setMaximumSize(QSize(50, 16777215));
-        rb_DefogOff->setFont(font4);
-        rb_DefogOff->setChecked(true);
-        rb_DefogOn = new QRadioButton(gbx_PicFlip_2);
-        rb_DefogOn->setObjectName(QStringLiteral("rb_DefogOn"));
-        rb_DefogOn->setEnabled(true);
-        rb_DefogOn->setGeometry(QRect(15, 43, 50, 21));
-        sizePolicy3.setHeightForWidth(rb_DefogOn->sizePolicy().hasHeightForWidth());
-        rb_DefogOn->setSizePolicy(sizePolicy3);
-        rb_DefogOn->setMinimumSize(QSize(50, 0));
-        rb_DefogOn->setMaximumSize(QSize(50, 16777215));
-        rb_DefogOn->setFont(font4);
         tabWidConfig->addTab(tab_4, QString());
         tab = new QWidget();
         tab->setObjectName(QStringLiteral("tab"));
-        pbOsdWordSave = new QPushButton(tab);
-        pbOsdWordSave->setObjectName(QStringLiteral("pbOsdWordSave"));
-        pbOsdWordSave->setGeometry(QRect(1060, 115, 91, 30));
-        pbOsdWordSave->setFont(font2);
-        pbOsdWordSave->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
         gbxPalSelect_8 = new QGroupBox(tab);
         gbxPalSelect_8->setObjectName(QStringLiteral("gbxPalSelect_8"));
-        gbxPalSelect_8->setGeometry(QRect(720, 10, 200, 100));
+        gbxPalSelect_8->setGeometry(QRect(320, 10, 200, 100));
         gbxPalSelect_8->setMinimumSize(QSize(200, 100));
         gbxPalSelect_8->setMaximumSize(QSize(200, 70));
         gbxPalSelect_8->setFont(font2);
         gbxPalSelect_8->setAlignment(Qt::AlignBottom|Qt::AlignLeading|Qt::AlignLeft);
-        cbxOSDFontSize = new QComboBox(gbxPalSelect_8);
-        cbxOSDFontSize->setObjectName(QStringLiteral("cbxOSDFontSize"));
-        cbxOSDFontSize->setGeometry(QRect(76, 60, 50, 22));
-        cbxOSDFontSize->setMinimumSize(QSize(50, 0));
-        cbxOSDFontSize->setMaximumSize(QSize(50, 16777215));
-        cbxOSDFont = new QComboBox(gbxPalSelect_8);
-        cbxOSDFont->setObjectName(QStringLiteral("cbxOSDFont"));
-        cbxOSDFont->setGeometry(QRect(76, 30, 100, 22));
-        cbxOSDFont->setMinimumSize(QSize(100, 0));
-        cbxOSDFont->setMaximumSize(QSize(100, 16777215));
-        lblCurrentPos_22 = new QLabel(gbxPalSelect_8);
-        lblCurrentPos_22->setObjectName(QStringLiteral("lblCurrentPos_22"));
-        lblCurrentPos_22->setGeometry(QRect(13, 34, 51, 20));
-        lblCurrentPos_22->setFont(font2);
-        lblCurrentPos_23 = new QLabel(gbxPalSelect_8);
-        lblCurrentPos_23->setObjectName(QStringLiteral("lblCurrentPos_23"));
-        lblCurrentPos_23->setGeometry(QRect(12, 61, 51, 20));
-        lblCurrentPos_23->setFont(font2);
         groupBox_9 = new QGroupBox(tab);
         groupBox_9->setObjectName(QStringLiteral("groupBox_9"));
         groupBox_9->setGeometry(QRect(20, 10, 150, 146));
@@ -2605,132 +2279,6 @@ public:
 
         horizontalLayout->addWidget(pbSendDirection);
 
-        groupBox_3 = new QGroupBox(tab_2);
-        groupBox_3->setObjectName(QStringLiteral("groupBox_3"));
-        groupBox_3->setGeometry(QRect(820, 10, 430, 180));
-        sizePolicy4.setHeightForWidth(groupBox_3->sizePolicy().hasHeightForWidth());
-        groupBox_3->setSizePolicy(sizePolicy4);
-        groupBox_3->setMinimumSize(QSize(430, 180));
-        groupBox_3->setMaximumSize(QSize(430, 180));
-        groupBox_3->setFont(font1);
-        groupBox_3->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-        label_2 = new QLabel(groupBox_3);
-        label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(71, 18, 41, 16));
-        label_4 = new QLabel(groupBox_3);
-        label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(68, 111, 31, 16));
-        label_7 = new QLabel(groupBox_3);
-        label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(124, 61, 21, 16));
-        label_8 = new QLabel(groupBox_3);
-        label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setGeometry(QRect(8, 58, 25, 20));
-        lblPadDirection = new QLabel(groupBox_3);
-        lblPadDirection->setObjectName(QStringLiteral("lblPadDirection"));
-        lblPadDirection->setGeometry(QRect(5, 21, 420, 110));
-        QSizePolicy sizePolicy5(QSizePolicy::Preferred, QSizePolicy::Fixed);
-        sizePolicy5.setHorizontalStretch(0);
-        sizePolicy5.setVerticalStretch(0);
-        sizePolicy5.setHeightForWidth(lblPadDirection->sizePolicy().hasHeightForWidth());
-        lblPadDirection->setSizePolicy(sizePolicy5);
-        lblPadDirection->setMinimumSize(QSize(420, 110));
-        lblPadDirection->setMaximumSize(QSize(420, 110));
-        lblPadDirection->setFrameShape(QFrame::NoFrame);
-        lblPadDirection->raise();
-        label_2->raise();
-        label_4->raise();
-        label_7->raise();
-        label_8->raise();
-        groupBox_8 = new QGroupBox(tab_2);
-        groupBox_8->setObjectName(QStringLiteral("groupBox_8"));
-        groupBox_8->setGeometry(QRect(820, 200, 430, 180));
-        sizePolicy4.setHeightForWidth(groupBox_8->sizePolicy().hasHeightForWidth());
-        groupBox_8->setSizePolicy(sizePolicy4);
-        groupBox_8->setMinimumSize(QSize(430, 180));
-        groupBox_8->setMaximumSize(QSize(430, 180));
-        groupBox_8->setFont(font1);
-        groupBox_8->setAlignment(Qt::AlignLeading|Qt::AlignLeft|Qt::AlignVCenter);
-        label_11 = new QLabel(groupBox_8);
-        label_11->setObjectName(QStringLiteral("label_11"));
-        label_11->setGeometry(QRect(72, 19, 41, 16));
-        label_12 = new QLabel(groupBox_8);
-        label_12->setObjectName(QStringLiteral("label_12"));
-        label_12->setGeometry(QRect(68, 111, 31, 16));
-        label_13 = new QLabel(groupBox_8);
-        label_13->setObjectName(QStringLiteral("label_13"));
-        label_13->setGeometry(QRect(124, 61, 21, 16));
-        label_14 = new QLabel(groupBox_8);
-        label_14->setObjectName(QStringLiteral("label_14"));
-        label_14->setGeometry(QRect(8, 58, 25, 20));
-        lblPadDirection_B = new QLabel(groupBox_8);
-        lblPadDirection_B->setObjectName(QStringLiteral("lblPadDirection_B"));
-        lblPadDirection_B->setGeometry(QRect(5, 19, 420, 110));
-        sizePolicy5.setHeightForWidth(lblPadDirection_B->sizePolicy().hasHeightForWidth());
-        lblPadDirection_B->setSizePolicy(sizePolicy5);
-        lblPadDirection_B->setMinimumSize(QSize(420, 110));
-        lblPadDirection_B->setMaximumSize(QSize(420, 110));
-        lblPadDirection_B->setFrameShape(QFrame::NoFrame);
-        lblPadDirection_B->raise();
-        label_11->raise();
-        label_12->raise();
-        label_13->raise();
-        label_14->raise();
-        groupBox_21 = new QGroupBox(tab_2);
-        groupBox_21->setObjectName(QStringLiteral("groupBox_21"));
-        groupBox_21->setGeometry(QRect(605, 13, 201, 191));
-        pbAdjDriftDown = new QPushButton(groupBox_21);
-        pbAdjDriftDown->setObjectName(QStringLiteral("pbAdjDriftDown"));
-        pbAdjDriftDown->setGeometry(QRect(80, 100, 50, 30));
-        pbAdjDriftDown->setMinimumSize(QSize(50, 30));
-        pbAdjDriftDown->setMaximumSize(QSize(50, 30));
-        pbAdjDriftDown->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbAdjDriftUp = new QPushButton(groupBox_21);
-        pbAdjDriftUp->setObjectName(QStringLiteral("pbAdjDriftUp"));
-        pbAdjDriftUp->setGeometry(QRect(80, 30, 50, 30));
-        pbAdjDriftUp->setMinimumSize(QSize(50, 30));
-        pbAdjDriftUp->setMaximumSize(QSize(50, 30));
-        pbAdjDriftUp->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbAAdjDriftSave = new QPushButton(groupBox_21);
-        pbAAdjDriftSave->setObjectName(QStringLiteral("pbAAdjDriftSave"));
-        pbAAdjDriftSave->setEnabled(true);
-        pbAAdjDriftSave->setGeometry(QRect(70, 140, 80, 40));
-        sizePolicy3.setHeightForWidth(pbAAdjDriftSave->sizePolicy().hasHeightForWidth());
-        pbAAdjDriftSave->setSizePolicy(sizePolicy3);
-        pbAAdjDriftSave->setMinimumSize(QSize(70, 40));
-        pbAAdjDriftSave->setMaximumSize(QSize(80, 40));
-        pbAAdjDriftSave->setFont(font2);
-        pbAAdjDriftSave->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbAdjDriftLeft = new QPushButton(groupBox_21);
-        pbAdjDriftLeft->setObjectName(QStringLiteral("pbAdjDriftLeft"));
-        pbAdjDriftLeft->setGeometry(QRect(20, 66, 50, 30));
-        pbAdjDriftLeft->setMinimumSize(QSize(50, 30));
-        pbAdjDriftLeft->setMaximumSize(QSize(50, 30));
-        pbAdjDriftLeft->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbAdjDriftRight = new QPushButton(groupBox_21);
-        pbAdjDriftRight->setObjectName(QStringLiteral("pbAdjDriftRight"));
-        pbAdjDriftRight->setGeometry(QRect(140, 66, 50, 30));
-        pbAdjDriftRight->setMinimumSize(QSize(50, 30));
-        pbAdjDriftRight->setMaximumSize(QSize(50, 30));
-        pbAdjDriftRight->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
-        pbAdjDriftStop = new QPushButton(groupBox_21);
-        pbAdjDriftStop->setObjectName(QStringLiteral("pbAdjDriftStop"));
-        pbAdjDriftStop->setGeometry(QRect(80, 66, 50, 30));
-        pbAdjDriftStop->setMinimumSize(QSize(50, 30));
-        pbAdjDriftStop->setMaximumSize(QSize(50, 30));
-        pbAdjDriftStop->setStyleSheet(QLatin1String("QPushButton{background-color: rgb(225, 225, 225);border:3px groove gray;border-radius:6px;padding:1px 4px;border-style: outset;}\n"
-"QPushButton:hover{background-color:rgb(200, 200, 200); color: black;}\n"
-"QPushButton:pressed{background-color:rgb(150, 150, 150);border-style: inset;}"));
         tabWidConfig->addTab(tab_2, QString());
         tab_8 = new QWidget();
         tab_8->setObjectName(QStringLiteral("tab_8"));
@@ -3065,203 +2613,6 @@ public:
         cbxEditLock_sys->setObjectName(QStringLiteral("cbxEditLock_sys"));
         cbxEditLock_sys->setGeometry(QRect(580, 363, 91, 16));
         cbxEditLock_sys->setFont(font2);
-        groupBox_17 = new QGroupBox(tab_8);
-        groupBox_17->setObjectName(QStringLiteral("groupBox_17"));
-        groupBox_17->setGeometry(QRect(17, 291, 321, 121));
-        sizePolicy4.setHeightForWidth(groupBox_17->sizePolicy().hasHeightForWidth());
-        groupBox_17->setSizePolicy(sizePolicy4);
-        groupBox_17->setMinimumSize(QSize(300, 110));
-        groupBox_17->setMaximumSize(QSize(321, 136));
-        groupBox_17->setFont(font2);
-        lblCurrentPos_28 = new QLabel(groupBox_17);
-        lblCurrentPos_28->setObjectName(QStringLiteral("lblCurrentPos_28"));
-        lblCurrentPos_28->setGeometry(QRect(5, 28, 40, 16));
-        lblCurrentPos_28->setMaximumSize(QSize(40, 16777215));
-        lblCurrentPos_28->setFont(font2);
-        lblCurrentPos_28->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        lblCurrentPos_29 = new QLabel(groupBox_17);
-        lblCurrentPos_29->setObjectName(QStringLiteral("lblCurrentPos_29"));
-        lblCurrentPos_29->setGeometry(QRect(5, 52, 40, 16));
-        lblCurrentPos_29->setMaximumSize(QSize(40, 16777215));
-        lblCurrentPos_29->setFont(font2);
-        lblCurrentPos_29->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        lblCurrentPos_30 = new QLabel(groupBox_17);
-        lblCurrentPos_30->setObjectName(QStringLiteral("lblCurrentPos_30"));
-        lblCurrentPos_30->setGeometry(QRect(5, 75, 40, 16));
-        lblCurrentPos_30->setMaximumSize(QSize(40, 16777215));
-        lblCurrentPos_30->setFont(font2);
-        lblCurrentPos_30->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        lblCurrentPos_31 = new QLabel(groupBox_17);
-        lblCurrentPos_31->setObjectName(QStringLiteral("lblCurrentPos_31"));
-        lblCurrentPos_31->setGeometry(QRect(4, 97, 40, 16));
-        lblCurrentPos_31->setMaximumSize(QSize(40, 16777215));
-        lblCurrentPos_31->setFont(font2);
-        lblCurrentPos_31->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        lblCurrentPos_32 = new QLabel(groupBox_17);
-        lblCurrentPos_32->setObjectName(QStringLiteral("lblCurrentPos_32"));
-        lblCurrentPos_32->setGeometry(QRect(60, 10, 40, 16));
-        lblCurrentPos_32->setMaximumSize(QSize(40, 16777215));
-        lblCurrentPos_32->setFont(font2);
-        lblCurrentPos_32->setAlignment(Qt::AlignCenter);
-        lblCurrentPos_33 = new QLabel(groupBox_17);
-        lblCurrentPos_33->setObjectName(QStringLiteral("lblCurrentPos_33"));
-        lblCurrentPos_33->setGeometry(QRect(126, 10, 40, 16));
-        lblCurrentPos_33->setMaximumSize(QSize(40, 16777215));
-        lblCurrentPos_33->setFont(font2);
-        lblCurrentPos_33->setAlignment(Qt::AlignCenter);
-        splitter = new QSplitter(groupBox_17);
-        splitter->setObjectName(QStringLiteral("splitter"));
-        splitter->setGeometry(QRect(50, 27, 50, 88));
-        splitter->setOrientation(Qt::Vertical);
-        lePid_X_Scale = new QLineEdit(splitter);
-        lePid_X_Scale->setObjectName(QStringLiteral("lePid_X_Scale"));
-        sizePolicy3.setHeightForWidth(lePid_X_Scale->sizePolicy().hasHeightForWidth());
-        lePid_X_Scale->setSizePolicy(sizePolicy3);
-        lePid_X_Scale->setMinimumSize(QSize(50, 0));
-        lePid_X_Scale->setMaximumSize(QSize(50, 16777215));
-        lePid_X_Scale->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_X_Scale->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter->addWidget(lePid_X_Scale);
-        lePid_X_P = new QLineEdit(splitter);
-        lePid_X_P->setObjectName(QStringLiteral("lePid_X_P"));
-        sizePolicy3.setHeightForWidth(lePid_X_P->sizePolicy().hasHeightForWidth());
-        lePid_X_P->setSizePolicy(sizePolicy3);
-        lePid_X_P->setMinimumSize(QSize(50, 0));
-        lePid_X_P->setMaximumSize(QSize(50, 16777215));
-        lePid_X_P->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_X_P->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter->addWidget(lePid_X_P);
-        lePid_X_I = new QLineEdit(splitter);
-        lePid_X_I->setObjectName(QStringLiteral("lePid_X_I"));
-        sizePolicy3.setHeightForWidth(lePid_X_I->sizePolicy().hasHeightForWidth());
-        lePid_X_I->setSizePolicy(sizePolicy3);
-        lePid_X_I->setMinimumSize(QSize(50, 0));
-        lePid_X_I->setMaximumSize(QSize(50, 16777215));
-        lePid_X_I->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_X_I->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter->addWidget(lePid_X_I);
-        lePid_X_D = new QLineEdit(splitter);
-        lePid_X_D->setObjectName(QStringLiteral("lePid_X_D"));
-        sizePolicy3.setHeightForWidth(lePid_X_D->sizePolicy().hasHeightForWidth());
-        lePid_X_D->setSizePolicy(sizePolicy3);
-        lePid_X_D->setMinimumSize(QSize(50, 0));
-        lePid_X_D->setMaximumSize(QSize(50, 16777215));
-        lePid_X_D->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_X_D->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter->addWidget(lePid_X_D);
-        splitter_2 = new QSplitter(groupBox_17);
-        splitter_2->setObjectName(QStringLiteral("splitter_2"));
-        splitter_2->setGeometry(QRect(120, 27, 50, 88));
-        splitter_2->setOrientation(Qt::Vertical);
-        lePid_Y_Scale = new QLineEdit(splitter_2);
-        lePid_Y_Scale->setObjectName(QStringLiteral("lePid_Y_Scale"));
-        sizePolicy3.setHeightForWidth(lePid_Y_Scale->sizePolicy().hasHeightForWidth());
-        lePid_Y_Scale->setSizePolicy(sizePolicy3);
-        lePid_Y_Scale->setMinimumSize(QSize(50, 0));
-        lePid_Y_Scale->setMaximumSize(QSize(50, 16777215));
-        lePid_Y_Scale->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_Y_Scale->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter_2->addWidget(lePid_Y_Scale);
-        lePid_Y_P = new QLineEdit(splitter_2);
-        lePid_Y_P->setObjectName(QStringLiteral("lePid_Y_P"));
-        sizePolicy3.setHeightForWidth(lePid_Y_P->sizePolicy().hasHeightForWidth());
-        lePid_Y_P->setSizePolicy(sizePolicy3);
-        lePid_Y_P->setMinimumSize(QSize(50, 0));
-        lePid_Y_P->setMaximumSize(QSize(50, 16777215));
-        lePid_Y_P->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_Y_P->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter_2->addWidget(lePid_Y_P);
-        lePid_Y_I = new QLineEdit(splitter_2);
-        lePid_Y_I->setObjectName(QStringLiteral("lePid_Y_I"));
-        sizePolicy3.setHeightForWidth(lePid_Y_I->sizePolicy().hasHeightForWidth());
-        lePid_Y_I->setSizePolicy(sizePolicy3);
-        lePid_Y_I->setMinimumSize(QSize(50, 0));
-        lePid_Y_I->setMaximumSize(QSize(50, 16777215));
-        lePid_Y_I->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_Y_I->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter_2->addWidget(lePid_Y_I);
-        lePid_Y_D = new QLineEdit(splitter_2);
-        lePid_Y_D->setObjectName(QStringLiteral("lePid_Y_D"));
-        sizePolicy3.setHeightForWidth(lePid_Y_D->sizePolicy().hasHeightForWidth());
-        lePid_Y_D->setSizePolicy(sizePolicy3);
-        lePid_Y_D->setMinimumSize(QSize(50, 0));
-        lePid_Y_D->setMaximumSize(QSize(50, 16777215));
-        lePid_Y_D->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePid_Y_D->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter_2->addWidget(lePid_Y_D);
-        lePidMaxOut = new QLineEdit(groupBox_17);
-        lePidMaxOut->setObjectName(QStringLiteral("lePidMaxOut"));
-        lePidMaxOut->setGeometry(QRect(190, 30, 50, 19));
-        sizePolicy3.setHeightForWidth(lePidMaxOut->sizePolicy().hasHeightForWidth());
-        lePidMaxOut->setSizePolicy(sizePolicy3);
-        lePidMaxOut->setMinimumSize(QSize(50, 0));
-        lePidMaxOut->setMaximumSize(QSize(50, 16777215));
-        lePidMaxOut->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePidMaxOut->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        lblMaxOut = new QLabel(groupBox_17);
-        lblMaxOut->setObjectName(QStringLiteral("lblMaxOut"));
-        lblMaxOut->setGeometry(QRect(175, 11, 80, 16));
-        lblMaxOut->setMinimumSize(QSize(80, 0));
-        lblMaxOut->setMaximumSize(QSize(80, 16777215));
-        lblMaxOut->setFont(font2);
-        lblMaxOut->setAlignment(Qt::AlignCenter);
-        lblMinOut = new QLabel(groupBox_17);
-        lblMinOut->setObjectName(QStringLiteral("lblMinOut"));
-        lblMinOut->setGeometry(QRect(175, 55, 80, 16));
-        lblMinOut->setMinimumSize(QSize(80, 0));
-        lblMinOut->setMaximumSize(QSize(80, 16777215));
-        lblMinOut->setFont(font2);
-        lblMinOut->setAlignment(Qt::AlignCenter);
-        lePidMinOut = new QLineEdit(groupBox_17);
-        lePidMinOut->setObjectName(QStringLiteral("lePidMinOut"));
-        lePidMinOut->setGeometry(QRect(190, 74, 50, 19));
-        sizePolicy3.setHeightForWidth(lePidMinOut->sizePolicy().hasHeightForWidth());
-        lePidMinOut->setSizePolicy(sizePolicy3);
-        lePidMinOut->setMinimumSize(QSize(50, 0));
-        lePidMinOut->setMaximumSize(QSize(50, 16777215));
-        lePidMinOut->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePidMinOut->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        lblDefaultSpeed = new QLabel(groupBox_17);
-        lblDefaultSpeed->setObjectName(QStringLiteral("lblDefaultSpeed"));
-        lblDefaultSpeed->setGeometry(QRect(239, 11, 80, 16));
-        lblDefaultSpeed->setMinimumSize(QSize(80, 0));
-        lblDefaultSpeed->setMaximumSize(QSize(80, 16777215));
-        lblDefaultSpeed->setFont(font2);
-        lblDefaultSpeed->setAlignment(Qt::AlignCenter);
-        lePtzDefSpeed = new QLineEdit(groupBox_17);
-        lePtzDefSpeed->setObjectName(QStringLiteral("lePtzDefSpeed"));
-        lePtzDefSpeed->setGeometry(QRect(260, 30, 50, 19));
-        sizePolicy3.setHeightForWidth(lePtzDefSpeed->sizePolicy().hasHeightForWidth());
-        lePtzDefSpeed->setSizePolicy(sizePolicy3);
-        lePtzDefSpeed->setMinimumSize(QSize(50, 0));
-        lePtzDefSpeed->setMaximumSize(QSize(50, 16777215));
-        lePtzDefSpeed->setStyleSheet(QLatin1String("background-color: rgb(255, 255, 255);\n"
-"border:2px gray;padding:1px 4px;border-style: inset;"));
-        lePtzDefSpeed->setAlignment(Qt::AlignRight|Qt::AlignTrailing|Qt::AlignVCenter);
-        splitter->raise();
-        splitter_2->raise();
-        lblCurrentPos_33->raise();
-        lblCurrentPos_32->raise();
-        lblCurrentPos_28->raise();
-        lblCurrentPos_29->raise();
-        lblCurrentPos_30->raise();
-        lblCurrentPos_31->raise();
-        lePidMaxOut->raise();
-        lblMaxOut->raise();
-        lblMinOut->raise();
-        lePidMinOut->raise();
-        lblDefaultSpeed->raise();
-        lePtzDefSpeed->raise();
         groupBox_10 = new QGroupBox(tab_8);
         groupBox_10->setObjectName(QStringLiteral("groupBox_10"));
         groupBox_10->setGeometry(QRect(520, 200, 231, 141));
@@ -3913,11 +3264,11 @@ public:
         menubar = new QMenuBar(MainWindow);
         menubar->setObjectName(QStringLiteral("menubar"));
         menubar->setGeometry(QRect(0, 0, 1380, 26));
-        QSizePolicy sizePolicy6(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        sizePolicy6.setHorizontalStretch(0);
-        sizePolicy6.setVerticalStretch(0);
-        sizePolicy6.setHeightForWidth(menubar->sizePolicy().hasHeightForWidth());
-        menubar->setSizePolicy(sizePolicy6);
+        QSizePolicy sizePolicy5(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        sizePolicy5.setHorizontalStretch(0);
+        sizePolicy5.setVerticalStretch(0);
+        sizePolicy5.setHeightForWidth(menubar->sizePolicy().hasHeightForWidth());
+        menubar->setSizePolicy(sizePolicy5);
         menubar->setNativeMenuBar(true);
         MainWindow->setMenuBar(menubar);
         statusbar = new QStatusBar(MainWindow);
@@ -3926,7 +3277,7 @@ public:
 
         retranslateUi(MainWindow);
 
-        tabWidConfig->setCurrentIndex(5);
+        tabWidConfig->setCurrentIndex(3);
 
 
         QMetaObject::connectSlotsByName(MainWindow);
@@ -4051,85 +3402,18 @@ public:
         lbl_lensTitle_12->setText(QApplication::translate("MainWindow", "\345\257\271\347\204\246", Q_NULLPTR));
         tabWidConfig->setTabText(tabWidConfig->indexOf(tab_7), QApplication::translate("MainWindow", "\345\270\270\347\224\250", Q_NULLPTR));
         groupBox->setTitle(QApplication::translate("MainWindow", "\347\233\270\346\234\272", Q_NULLPTR));
-        rb_ExpoIris->setText(QApplication::translate("MainWindow", "\345\205\211\345\234\210\344\274\230\345\205\210", Q_NULLPTR));
-        rb_ExpoManual->setText(QApplication::translate("MainWindow", "\346\211\213\345\212\250", Q_NULLPTR));
         rb_ExpoAuto->setText(QApplication::translate("MainWindow", "\350\207\252\345\212\250", Q_NULLPTR));
-        rb_ExpoShutter->setText(QApplication::translate("MainWindow", "\345\277\253\351\227\250\344\274\230\345\205\210", Q_NULLPTR));
         gbx_WB->setTitle(QApplication::translate("MainWindow", "\347\231\275\345\271\263\350\241\241", Q_NULLPTR));
-        cbx_WbMode->clear();
-        cbx_WbMode->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "\346\210\267\345\244\226", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\256\244\345\206\205", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "ATW", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\346\211\213\345\212\250", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\346\210\267\345\244\226\350\207\252\345\212\250", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\350\267\257\347\201\257\350\207\252\345\212\250", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\350\267\257\347\201\257", Q_NULLPTR)
-        );
         gbx_Sharpen->setTitle(QApplication::translate("MainWindow", "\351\224\220\345\214\226", Q_NULLPTR));
-        pbSharpenReset->setText(QApplication::translate("MainWindow", "\345\244\215\344\275\215", Q_NULLPTR));
-        pbSharpenDown->setText(QApplication::translate("MainWindow", "\351\224\220\345\214\226-", Q_NULLPTR));
-        pbSharpenUp->setText(QApplication::translate("MainWindow", "\351\224\220\345\214\226+", Q_NULLPTR));
         gbx_Gamma->setTitle(QApplication::translate("MainWindow", "\344\274\275\351\251\254", Q_NULLPTR));
         gbx_Expo->setTitle(QApplication::translate("MainWindow", "\346\233\235\345\205\211", Q_NULLPTR));
-        pbExpDown->setText(QApplication::translate("MainWindow", "\346\233\235\345\205\211-", Q_NULLPTR));
-        pbExpUp->setText(QApplication::translate("MainWindow", "\346\233\235\345\205\211+", Q_NULLPTR));
-        pbExpReset->setText(QApplication::translate("MainWindow", "\345\244\215\344\275\215", Q_NULLPTR));
         gbx_backLight->setTitle(QApplication::translate("MainWindow", "\345\274\272\345\205\211\346\212\221\345\210\266", Q_NULLPTR));
-        pbBackLightSend->setText(QApplication::translate("MainWindow", "\350\256\276\347\275\256", Q_NULLPTR));
-        cbx_backLightMode->clear();
-        cbx_backLightMode->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "\345\205\263\351\227\255", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\350\203\214\345\205\211\350\241\245\345\201\277", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\274\272\345\205\211\346\212\221\345\210\266", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\256\275\345\212\250\346\200\201", Q_NULLPTR)
-        );
         gbx_Expo_2->setTitle(QApplication::translate("MainWindow", "\345\205\211\345\234\210", Q_NULLPTR));
-        pbApReset->setText(QApplication::translate("MainWindow", "\345\244\215\344\275\215", Q_NULLPTR));
-        pbApDown->setText(QApplication::translate("MainWindow", "\345\205\211\345\234\210-", Q_NULLPTR));
-        pbApUp->setText(QApplication::translate("MainWindow", "\345\205\211\345\234\210+", Q_NULLPTR));
         gbx_Shutter->setTitle(QApplication::translate("MainWindow", "\345\277\253\351\227\250", Q_NULLPTR));
-        pbShutterReset->setText(QApplication::translate("MainWindow", "\345\244\215\344\275\215", Q_NULLPTR));
-        pbApShutterDown->setText(QApplication::translate("MainWindow", "\345\277\253\351\227\250-", Q_NULLPTR));
-        pbShutterUp->setText(QApplication::translate("MainWindow", "\345\277\253\351\227\250+", Q_NULLPTR));
         gbx_PicFlip->setTitle(QApplication::translate("MainWindow", "\347\277\273\350\275\254\345\233\276\345\203\217", Q_NULLPTR));
-        rb_flipPicOff->setText(QApplication::translate("MainWindow", "Off", Q_NULLPTR));
-        rb_flipPicOn->setText(QApplication::translate("MainWindow", "On", Q_NULLPTR));
         gbx_PicFlip_2->setTitle(QApplication::translate("MainWindow", "\351\200\217\351\233\276", Q_NULLPTR));
-        rb_DefogOff->setText(QApplication::translate("MainWindow", "Off", Q_NULLPTR));
-        rb_DefogOn->setText(QApplication::translate("MainWindow", "On", Q_NULLPTR));
         tabWidConfig->setTabText(tabWidConfig->indexOf(tab_4), QApplication::translate("MainWindow", "\347\233\270\346\234\272", Q_NULLPTR));
-        pbOsdWordSave->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230", Q_NULLPTR));
         gbxPalSelect_8->setTitle(QApplication::translate("MainWindow", "\345\255\227\344\275\223", Q_NULLPTR));
-        cbxOSDFontSize->clear();
-        cbxOSDFontSize->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "32", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "24", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "23", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "22", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "30", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "29", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "28", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "27", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "26", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "25", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "31", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "34", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "36", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "38", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "40", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "41", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "42", Q_NULLPTR)
-        );
-        cbxOSDFont->clear();
-        cbxOSDFont->insertItems(0, QStringList()
-         << QApplication::translate("MainWindow", "\351\273\221\344\275\223", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\215\216\346\226\207\344\273\277\345\256\213", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "MS Shell Dlg 2", Q_NULLPTR)
-         << QApplication::translate("MainWindow", "\345\256\213\344\275\223", Q_NULLPTR)
-        );
-        lblCurrentPos_22->setText(QApplication::translate("MainWindow", "\345\255\227\344\275\223", Q_NULLPTR));
-        lblCurrentPos_23->setText(QApplication::translate("MainWindow", "\345\255\227\351\253\230", Q_NULLPTR));
         groupBox_9->setTitle(QApplication::translate("MainWindow", "OSD", Q_NULLPTR));
         cbxCrosser->setText(QApplication::translate("MainWindow", "\345\215\201\345\255\227", Q_NULLPTR));
         cbxFullScreen->setText(QApplication::translate("MainWindow", "\350\276\223\345\207\272\345\205\250\345\261\217", Q_NULLPTR));
@@ -4188,25 +3472,6 @@ public:
 #endif // QT_NO_STATUSTIP
         le_setPitch->setText(QApplication::translate("MainWindow", "0", Q_NULLPTR));
         pbSendDirection->setText(QApplication::translate("MainWindow", "\345\217\221\351\200\201", Q_NULLPTR));
-        groupBox_3->setTitle(QApplication::translate("MainWindow", "\345\205\211\347\224\265\345\211\215-\346\226\271\344\275\215", Q_NULLPTR));
-        label_2->setText(QApplication::translate("MainWindow", "0\302\260", Q_NULLPTR));
-        label_4->setText(QApplication::translate("MainWindow", "180\302\260", Q_NULLPTR));
-        label_7->setText(QApplication::translate("MainWindow", "90\302\260", Q_NULLPTR));
-        label_8->setText(QApplication::translate("MainWindow", "270\302\260", Q_NULLPTR));
-        lblPadDirection->setText(QString());
-        groupBox_8->setTitle(QApplication::translate("MainWindow", "\345\205\211\347\224\265\345\220\216-\346\226\271\344\275\215", Q_NULLPTR));
-        label_11->setText(QApplication::translate("MainWindow", "0\302\260", Q_NULLPTR));
-        label_12->setText(QApplication::translate("MainWindow", "180\302\260", Q_NULLPTR));
-        label_13->setText(QApplication::translate("MainWindow", "90\302\260", Q_NULLPTR));
-        label_14->setText(QApplication::translate("MainWindow", "270\302\260", Q_NULLPTR));
-        lblPadDirection_B->setText(QString());
-        groupBox_21->setTitle(QApplication::translate("MainWindow", "\346\274\202\347\247\273\350\260\203\346\225\264", Q_NULLPTR));
-        pbAdjDriftDown->setText(QApplication::translate("MainWindow", "\344\270\213", Q_NULLPTR));
-        pbAdjDriftUp->setText(QApplication::translate("MainWindow", "\344\270\212", Q_NULLPTR));
-        pbAAdjDriftSave->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230", Q_NULLPTR));
-        pbAdjDriftLeft->setText(QApplication::translate("MainWindow", "\345\267\246", Q_NULLPTR));
-        pbAdjDriftRight->setText(QApplication::translate("MainWindow", "\345\217\263", Q_NULLPTR));
-        pbAdjDriftStop->setText(QApplication::translate("MainWindow", "\345\201\234", Q_NULLPTR));
         tabWidConfig->setTabText(tabWidConfig->indexOf(tab_2), QApplication::translate("MainWindow", "\345\257\271\346\240\207\350\260\203\351\233\266", Q_NULLPTR));
         groupBox_4->setTitle(QApplication::translate("MainWindow", "\345\205\211\347\224\265A", Q_NULLPTR));
         lblCurrentPos_15->setText(QApplication::translate("MainWindow", "\347\233\270\346\234\272IP", Q_NULLPTR));
@@ -4236,16 +3501,6 @@ public:
         cbxUseDefFocB->setText(QApplication::translate("MainWindow", "\344\275\277\347\224\250\351\273\230\350\256\244\345\257\271\347\204\246\347\202\271", Q_NULLPTR));
         pbConfigSave->setText(QApplication::translate("MainWindow", "\344\277\235\345\255\230", Q_NULLPTR));
         cbxEditLock_sys->setText(QApplication::translate("MainWindow", "\347\274\226\350\276\221", Q_NULLPTR));
-        groupBox_17->setTitle(QApplication::translate("MainWindow", "PID", Q_NULLPTR));
-        lblCurrentPos_28->setText(QApplication::translate("MainWindow", "Scale", Q_NULLPTR));
-        lblCurrentPos_29->setText(QApplication::translate("MainWindow", "P", Q_NULLPTR));
-        lblCurrentPos_30->setText(QApplication::translate("MainWindow", "I", Q_NULLPTR));
-        lblCurrentPos_31->setText(QApplication::translate("MainWindow", "D", Q_NULLPTR));
-        lblCurrentPos_32->setText(QApplication::translate("MainWindow", "X", Q_NULLPTR));
-        lblCurrentPos_33->setText(QApplication::translate("MainWindow", "Y", Q_NULLPTR));
-        lblMaxOut->setText(QApplication::translate("MainWindow", "\346\234\200\345\244\247\351\200\237\345\272\246", Q_NULLPTR));
-        lblMinOut->setText(QApplication::translate("MainWindow", "\346\234\200\345\260\217\351\200\237\345\272\246", Q_NULLPTR));
-        lblDefaultSpeed->setText(QApplication::translate("MainWindow", "\351\273\230\350\256\244\351\200\237\345\272\246", Q_NULLPTR));
         groupBox_10->setTitle(QApplication::translate("MainWindow", "\345\256\211\350\243\205\344\275\215\347\275\256", Q_NULLPTR));
         lblCurrentPos_20->setText(QApplication::translate("MainWindow", "\345\205\211\347\224\265A", Q_NULLPTR));
         lblCurrentPos_21->setText(QApplication::translate("MainWindow", "\345\205\211\347\224\265B", Q_NULLPTR));

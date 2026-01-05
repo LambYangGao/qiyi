@@ -125,23 +125,6 @@ public:
     bool mbCenterAsk;//是否有数据请求
     char mcSID;
     char mServoCom[16];
-    //中心引导
-typedef struct gTargetPos_s
-    {
-        double lontude;         //目标经度
-        double latitude;        //目标纬度
-        double    laserDist1;   //测距机1目标距离
-        double    laserDist2;   //测距机2目标距离
-        double    distance;     //测距机2目标距离
-        int    height;          //目标高度
-        double angle;           //目标偏角，相对于船尾方向
-        int laserOnFlag;
-        int currentIrLens;
-        int currentHdLens;
-        int x;
-        int y;
-    } gTargetPos_s;
-	gTargetPos_s gTargetPos;
 	
     uchar mcDevID;//设备ID，仅小光学局域使用
     GuideData mCenterGuide;
@@ -371,7 +354,6 @@ protected:	//mouse
     void paintEvent(QPaintEvent *event);
 
     bool eventFilter(QObject *watched, QEvent *event);  ////事件过滤
-    void drawAngleMeter(QLabel * uipad,int direction,int angle,int pitch);  //控件绘制函数
     void lblPaintAngleGap(double d1,double p1,double d2,double p2);
     void drawViewAngle(QPixmap *fitPixmap,int scrWidth,int scrHeight);
 
@@ -380,8 +362,6 @@ protected:	//mouse
     void updateVirtualJoyStick(int x,int y);
     int ZoomValToLensData_Improved(int in_zoomVal, int* BeiShu, int* Lens, double* hfov);
     void logZoomAndFOV(int zoomVal, int lensVal, double fov, const QString& camera);
-
-	void autoFilmCalcTargetPosition(double * outMuBiaoWeiZhiX,double * outMuBiaoWeiZhiY, double * outMuBiaoGaoDu, double * outMuBiaoJiaoDu,int MuBiaoJuli,double panVal,double tiltVal,double AnZhuangX,double AnZhuangY,double AnZhuangZ);
     void autoAdjZoomFocal(int roi_width);
     int  gotoNewLen(int autoZoomVal);
     int getZoomFromDistance(int distance);
@@ -585,18 +565,7 @@ private slots:
 
     void on_pbSysClose_clicked();
 
-    void on_pbAdjDriftUp_pressed();
-    void on_pbAdjDriftDown_pressed();
-    void on_pbAdjDriftLeft_pressed();
-    void on_pbAdjDriftRight_pressed();
-    void on_pbAdjDriftStop_clicked();
 
-    void on_pbAAdjDriftSave_clicked();
-
-    void on_pbAdjDriftUp_released();
-    void on_pbAdjDriftDown_released();
-    void on_pbAdjDriftLeft_released();
-    void on_pbAdjDriftRight_released();
 
 signals:
     void mouseMove(QMouseEvent *event);//自定义一个信号

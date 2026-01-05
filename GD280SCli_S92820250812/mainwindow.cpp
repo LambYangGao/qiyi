@@ -456,9 +456,6 @@ void MainWindow::initControlStat()
     ui->pb_OpenSelfTest_B->setVisible(0);
     ui->pb_CloseSelfTest_B->setVisible(0);
     ui->gbx_Expo->setEnabled(true);
-
-    ui->lblPadDirection->installEventFilter(this);//安装事件过滤器
-    ui->lblPadDirection_B->installEventFilter(this);//安装事件过滤器
     ui->lbl_SimJoystick->installEventFilter(this);//安装事件过滤器
 
     QIntValidator* validv = new QIntValidator;
@@ -1545,14 +1542,6 @@ void MainWindow::paintEvent(QPaintEvent *event)
 
 bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 {
-    if(watched==ui->lblPadDirection && event->type()==QEvent::Paint)//判断是否是lblImage控件，是否是绘制事件
-    {
-        drawAngleMeter(this->ui->lblPadDirection,mPtzDirection_A,mHdViewAngle_A,mPtzPitch_A); //绘制
-    }
-    if(watched==ui->lblPadDirection_B && event->type()==QEvent::Paint)//判断是否是lblImage控件，是否是绘制事件
-    {
-        drawAngleMeter(this->ui->lblPadDirection_B,mPtzDirection_B,mHdViewAngle_B,mPtzPitch_B); //绘制
-    }
 
     if(watched==ui->lbl_SimJoystick && event->type()==QEvent::Paint)//判断是否是lblImage控件，是否是绘制事件
     {
@@ -1562,45 +1551,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
     return QWidget::eventFilter(watched,event);
     
-
-}
-
-/*在pad上画方位角度示意
-direction: 方位， angle： 视场角*/
-void MainWindow::drawAngleMeter(QLabel * uipad,int direction,int angle, int pitch)
-{
-    QPen pen;//画笔对象
-    QBrush brush;
-    pen.setColor(QColor(0,0,0,0));//画笔颜色
-    pen.setWidth(1);//画笔粗细
-    brush.setColor(QColor(100,100,0,70));
-    brush.setStyle(Qt::SolidPattern);
-    QPainter p(uipad);
-
-    p.setBrush(brush);
-    p.setPen(pen);
-    p.drawEllipse(34,17,80,80);
-    pen.setWidth(1);//画笔粗细
-    pen.setColor(QColor(255,0,0,255));//画笔颜色
-    p.setPen(pen);
-
-    QRectF rectangle(34,17,80,80);
-    int startAngle = ((90-direction)-angle/2) * 16 ;//起始角度,单位为1/16度 30 * 16就是30度
-    int spanAngle = angle * 16;//夹角
-    p.drawPie(rectangle,startAngle,spanAngle);//画扇形
-
-    //俯仰
-    pen.setColor(QColor(0,0,0,40));//画笔颜色
-    p.setPen(pen);
-    p.drawLine(250,60,300,60);
-    p.drawLine(250,10,250,105);
-    pen.setColor(QColor(255,0,0,255));//画笔颜色
-    p.setPen(pen);
-
-    QRectF rectangle2(205,15,90,90);
-    startAngle = (pitch-angle/2) * 16 ;//起始角度,单位为1/16度 30 * 16就是30度
-    spanAngle = angle * 16;//夹角
-    p.drawPie(rectangle2,startAngle,spanAngle);//画扇形
 }
 
 //在屏幕上画刻度线
@@ -2404,8 +2354,6 @@ void MainWindow::setCtlObjStatus(bool enFlag)
     ui->pbZoomOut->setEnabled(enFlag);
     ui->pbAutoFoc->setEnabled(enFlag);
     ui->pbToZero->setEnabled(enFlag);
-    ui->lblPadDirection->setEnabled(enFlag);
-    ui->lblPadDirection_B->setEnabled(enFlag);
     ui->rb_trackStick->setEnabled(enFlag);
     ui->rb_Center->setEnabled(enFlag);
     ui->rb_Tracking->setEnabled(enFlag);
@@ -2812,47 +2760,6 @@ void MainWindow::slotGetUpdateJoystick()
 {
     updateJoyStick();
 }
-
-/*
- * outMuBiaoJiaoDu: 输出计算结果，目标相对落点水平方向偏离角度,单位度
- * outMuBiaoGaoDu: 输出计算结果,目标相对甲板高度,单位米
- *
- * targetDistance: 输入参数,光电转台安装位置到目标测距机结果，单位分米
- * panVal: 输入参数, 光电转台相对海平面的真水平角度,单位度
- * tiltVal: 输入参数, 光电转台相对海平面的真俯仰角度
- * AnZhuangX: 输入参数,光电转台安装位置相对落点水平X方向距离,单位米
- * AnZhuangY: 输入参数,光电转台安装位置相对落点水平Y方向距离,单位米
- * AnZhuangZ: 输入参数,光电转台安装位置相对落点垂直Z方向距离,单位米
- */
-void MainWindow::autoFilmCalcTargetPosition(double * outMuBiaoWeiZhiX,double * outMuBiaoWeiZhiY, double * outMuBiaoGaoDu, double * outMuBiaoJiaoDu,int targetDistance,
-                                            double panVal,double tiltVal,double AnZhuangX,double AnZhuangY,double AnZhuangZ)
-{
-    if(targetDistance > 4000 || targetDistance < 1)
-        return;
-    double radPanVal = Deg2Rad(panVal);
-    double radTiltVal = Deg2Rad(tiltVal);
-    double horDistance = (targetDistance) * cos(radTiltVal);
-
-    double MuBiaoWeiZhiX = 0;
-    double MuBiaoWeiZhiY = 0;
-
-    MuBiaoWeiZhiX = horDistance* sin(radPanVal)+AnZhuangX;
-    MuBiaoWeiZhiY = horDistance* cos(radPanVal)+AnZhuangY;
-
-    *outMuBiaoJiaoDu = Rad2Deg(atan(MuBiaoWeiZhiX / MuBiaoWeiZhiY));
-    *outMuBiaoGaoDu = targetDistance* sin(radTiltVal)+AnZhuangZ;
-
-    gTargetPos.angle = *outMuBiaoJiaoDu;
-    gTargetPos.height = *outMuBiaoGaoDu;
-
-    *outMuBiaoWeiZhiX = MuBiaoWeiZhiX;
-    *outMuBiaoWeiZhiY = MuBiaoWeiZhiY;
-    gTargetPos.x= MuBiaoWeiZhiX;
-    gTargetPos.y= MuBiaoWeiZhiY;
-
-    return;
-}
-
 
 int MainWindow::gotoNewLen(int autoZoomVal)
 {
@@ -4069,72 +3976,4 @@ void MainWindow::quitAndShutdown()
 void MainWindow::on_pbSysClose_clicked()
 {
     quitAndShutdown();
-}
-
-
-void MainWindow::on_pbAdjDriftUp_pressed()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-
-    udpskt->write((char *)S9AdjDriftUp ,sizeof(S9AdjDriftUp));
-
-}
-
-void MainWindow::on_pbAdjDriftDown_pressed()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-
-    udpskt->write((char *)S9AdjDriftDown ,sizeof(S9AdjDriftDown));
-}
-
-void MainWindow::on_pbAdjDriftLeft_pressed()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-
-    udpskt->write((char *)S9AdjDriftLeft ,sizeof(S9AdjDriftLeft));
-}
-
-void MainWindow::on_pbAdjDriftRight_pressed()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-
-    udpskt->write((char *)S9AdjDriftRight ,sizeof(S9AdjDriftRight));
-}
-
-void MainWindow::on_pbAdjDriftUp_released()
-{
-    on_pbAdjDriftStop_clicked();
-}
-void MainWindow::on_pbAdjDriftDown_released()
-{
-    on_pbAdjDriftStop_clicked();
-}
-
-void MainWindow::on_pbAdjDriftLeft_released()
-{
-    on_pbAdjDriftStop_clicked();
-}
-
-void MainWindow::on_pbAdjDriftRight_released()
-{
-    on_pbAdjDriftStop_clicked();
-}
-void MainWindow::on_pbAdjDriftStop_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-
-    udpskt->write((char *)S9AdjDriftStop ,sizeof(S9AdjDriftStop));
-}
-
-void MainWindow::on_pbAAdjDriftSave_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-
-    udpskt->write((char *)S9SaveParam ,sizeof(S9SaveParam));
 }
