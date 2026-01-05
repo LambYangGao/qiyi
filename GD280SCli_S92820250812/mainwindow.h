@@ -82,7 +82,7 @@ QT_END_NAMESPACE
 #define  PTZ_SPEED_VAL 2000     //  20°/s
 #define  PTZ_PELCO_SPD_VAL  32
 #define HID_RESOLUTION  0x200
-#define  PTZMSG_BUF_LEN     33  //转台返回信息的buffer长度
+#define  PTZMSG_BUF_LEN     33
 #define OPMODE_STICK    0
 #define OPMODE_TOZERO   1
 #define OPMODE_CENTER   2
@@ -111,17 +111,11 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    void closeEvent(QCloseEvent *event);
 
     struct GuideData//引导数据
     {
         QTime tTime;//ms
         double dblR;//m，[0, 16777214], 16777215表示大于16777214m, 分辨率1m
-        double dblA;//°，[0, 360), 分辨率0.1"
-        double dblE;//°，[-90, 190], 分辨率0.1"
-    };
-    struct AE
-    {
         double dblA;//°，[0, 360), 分辨率0.1"
         double dblE;//°，[-90, 190], 分辨率0.1"
     };
@@ -134,13 +128,13 @@ public:
     //中心引导
 typedef struct gTargetPos_s
     {
-        double lontude;     //目标经度
-        double latitude;    //目标纬度
+        double lontude;         //目标经度
+        double latitude;        //目标纬度
         double    laserDist1;   //测距机1目标距离
         double    laserDist2;   //测距机2目标距离
-        double    distance;   //测距机2目标距离
-        int    height;      //目标高度
-        double angle;       //目标偏角，相对于船尾方向
+        double    distance;     //测距机2目标距离
+        int    height;          //目标高度
+        double angle;           //目标偏角，相对于船尾方向
         int laserOnFlag;
         int currentIrLens;
         int currentHdLens;
@@ -149,18 +143,9 @@ typedef struct gTargetPos_s
     } gTargetPos_s;
 	gTargetPos_s gTargetPos;
 	
-    struct IRDetectionConfig {
-        int tarLmax;
-        int k1;
-        int k2;
-        float scoreThreshold;
-    };
-    IRDetectionConfig irConfig;
-	
     uchar mcDevID;//设备ID，仅小光学局域使用
     GuideData mCenterGuide;
     GuideData mAEJoyCorrect;
-    AE mAETheo;//理论弹道引导AE
     int mnRelativeT;
     bool ParseCommData(int nIdx);//滑动窗口
     //void CommSendToCenterRAE(uchar cDID, const QTime & tTime, bool bCaught, double dblR, double dblA, double dblE);
@@ -253,9 +238,9 @@ private:
     vidoeplayer * mPlayerSub;          //播放线程 RTSP视频流B
     QImage mImageCh2;                  //记录当前的图像
     bool mImageCh2GetNew;              //通道2更新标记
-    int currentMainSrc;                 //当前主屏源
-    bool scanflag;                      //通道切换
-    bool picInPicOn;                    //画中画开关
+    int currentMainSrc;                //当前主屏源
+    bool scanflag;                     //通道切换
+    bool picInPicOn;                   //画中画开关
     int presetCurrentType;
     int presetCurrentIdx;
     uint32_t cfgIpAddr;
@@ -370,10 +355,8 @@ private:
     void handleStartTrackingProcessing();            // 处理startTracking相关
     void handleAlgorithmProcessing();                // 处理算法选择相关
     void handleDirectionPitchDistanceProcessing();   // 处理方位俯仰距离相关
-    void handleZoomFocusProcessing();               // 处理变倍对焦相关
-    void handleMouseProcessing();                   // 处理鼠标相关
-    void applyTrackingAlgorithm(int algorithmId);   // 应用跟踪算法的通用函数
-    void startIRSmallTargetTracking();              // 启动IR小目标跟踪
+    void handleZoomFocusProcessing();                // 处理变倍对焦相关
+    void handleMouseProcessing();                    // 处理鼠标相关
     void handleRemoteMouseClick(uint16_t mouseX, uint16_t mouseY);  // 处理远程鼠标点击
 
 protected:	//mouse
@@ -389,13 +372,8 @@ protected:	//mouse
 
     bool eventFilter(QObject *watched, QEvent *event);  ////事件过滤
     void drawAngleMeter(QLabel * uipad,int direction,int angle,int pitch);  //控件绘制函数
-    void drawCross(QLabel * uipad, QPixmap * fitPixmap);
-    void drawMouseHit(QPixmap * fitPixmap,int x,int y);
     void lblPaintAngleGap(double d1,double p1,double d2,double p2);
     void drawViewAngle(QPixmap *fitPixmap,int scrWidth,int scrHeight);
-    void drawStickExpo(double expo);
-    void drawMouseBox(QPixmap * fitPixmap,int x,int y);
-    void drawAzimuthScale(QPixmap * fitPixmap,int scrWidth,int scrHeight);
 
     void drawVirtualJoyStick(int x,int y, int btn);
     void getMouseOnVirtualJoyStk(QMouseEvent *event);
@@ -406,18 +384,14 @@ protected:	//mouse
 	void autoFilmCalcTargetPosition(double * outMuBiaoWeiZhiX,double * outMuBiaoWeiZhiY, double * outMuBiaoGaoDu, double * outMuBiaoJiaoDu,int MuBiaoJuli,double panVal,double tiltVal,double AnZhuangX,double AnZhuangY,double AnZhuangZ);
     void autoAdjZoomFocal(int roi_width);
     int  gotoNewLen(int autoZoomVal);
-    int getFocalFromLens(int ch,int inlensVal,int distance);
     int getZoomFromDistance(int distance);
     bool CheckAppStatus(const QString &appName);
-
-    int adjFocusPosByDist(QUdpSocket * udpSocket,int dist);
-	
+    int adjFocusPosByDist(QUdpSocket * udpSocket,int dist);	
     QUdpSocket * getCurMainPTZ();
 
 private slots:
     void on_pbConnect_clicked();
     void on_pbDisConnect_clicked();
-    void on_SendText_changed();
     void socket_Read_Data_A();
     void socket_Read_Data_B();
     void socket_Disconnected_A();
@@ -431,8 +405,6 @@ private slots:
     void slotGetSigBackToMainWin();       //全屏相应
     void slotGetUpdateJoystick();
     void on_pushButton_swap_clicked();
-
-    void on_pbPicInPicOnOff_clicked();
 
     void on_pbUp_released();
     void on_pbDown_released();
@@ -507,11 +479,7 @@ private slots:
 
     void on_rb_trackStick_clicked();
 
-    void on_rb_trackTable_clicked();
-
     void on_rb_Center_clicked();
-
-    void on_leOsdWord_textChanged(const QString &arg1);
 
     void on_rb_StickSpeedH_clicked();
 
@@ -538,24 +506,9 @@ private slots:
 
     void on_leCenterCom_textChanged(const QString &arg1);
 
-    void on_sldVidEnhance_valueChanged(int value);
-
-    void on_sldVidBright_valueChanged(int value);
-
     void on_cbxDispOSDTime_clicked(bool checked);
 
     bool EnSetSysTimePrivilege();
-
-    void on_cbxOSDFont_currentIndexChanged(const QString &arg1);
-
-    void on_cbxOSDFontHeight_currentIndexChanged(const QString &arg1);
-
-    void on_leOSDLocationY_textChanged(const QString &arg1);
-     void on_rb_KcfMarking_clicked();
-    void on_rb_TopHatMarking_clicked();
-    void on_rb_WhCentroidMarking_clicked();
-    void on_rb_BlkCentroidMarking_clicked();
-    void calcAngleSpeed();
 
     void on_cbxFullScreen_clicked();
 
@@ -575,10 +528,6 @@ private slots:
 
     void on_pClearbDbgOut_clicked();
 
-    void on_pbApUp_clicked();
-
-    void on_pbApDown_clicked();
-
     void on_rb_toZero_clicked();
 
     void on_rb_Tracking_clicked();
@@ -590,22 +539,6 @@ private slots:
 
     void on_rb_ExpoAuto_clicked();
 
-    void on_rb_ExpoManual_clicked();
-
-    void on_rb_ExpoShutter_clicked();
-
-    void on_rb_ExpoIris_clicked();
-
-    void on_pbExpUp_clicked();
-
-    void on_pbExpDown_clicked();
-
-    void on_pbExpReset_clicked();
-
-    void on_rb_flipPicOff_clicked();
-
-    void on_rb_flipPicOn_clicked();
-
     void on_rb_HGyroLock_clicked();
 
     void on_rb_HGyroUnLock_clicked();
@@ -613,28 +546,6 @@ private slots:
     void on_rb_VGyroLock_clicked();
 
     void on_rb_VGyroUnLock_clicked();
-
-    void on_cbx_WbMode_currentIndexChanged(int index);
-
-    void on_pbBackLightSend_clicked();
-
-    void on_cbx_backLightMode_currentIndexChanged(int index);
-
-    void on_pbApReset_clicked();
-
-    void on_pbSharpenUp_clicked();
-
-    void on_pbSharpenDown_clicked();
-
-    void on_pbSharpenReset_clicked();
-
-    void on_pbShutterUp_clicked();
-
-    void on_pbApShutterDown_clicked();
-
-    void on_pbShutterReset_clicked();
-
-    void on_spb_Gamma_valueChanged(int arg1);
 
     void on_pbSetDirection_clicked();
 
@@ -653,10 +564,6 @@ private slots:
     void on_pbDbgSendBorderChk_clicked();
 
     void on_rb_SelDetectNone_clicked();
-    
-    void on_rb_SelDetectMtd1_clicked();
-    
-    void on_rb_SelDetectMtd2_clicked();
 
     void on_pbDbgSendconvAE_clicked();
 
@@ -673,10 +580,6 @@ private slots:
     void on_pbConnect_B_clicked();
 
     void on_pbDisConnect_B_clicked();
-
-    void on_rb_DefogOff_clicked();
-
-    void on_rb_DefogOn_clicked();
 
     void on_pbSetMotor_B_clicked();
 

@@ -72,22 +72,8 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 INCLUDEPATH += $$PWD/mpeg
 INCLUDEPATH += $$PWD/mpeg/ffmpeg/include
 INCLUDEPATH += $$PWD/hidapi
-INCLUDEPATH += $$PWD/pid
 INCLUDEPATH += $$PWD/centercom
 
-#INCLUDEPATH += E:\OpenCV\MinGW32_version\OpenCV-MinGW-Build-OpenCV-3.4.1\include
-#LIBS += E:\OpenCV\MinGW32_version\OpenCV-MinGW-Build-OpenCV-3.4.1\bin\libopencv_*.dll
-#INCLUDEPATH += F:\OpenCV\MinGW32_OpenCV\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\include
-#LIBS += F:\OpenCV\MinGW32_OpenCV\OpenCV-MinGW-Build-OpenCV-4.5.0-with-contrib\x64\mingw\bin\libopencv_*.dll
-
-#LIBS += $$PWD/mpeg/ffmpeg/lib/avcodec.lib\
-#        $$PWD/mpeg/ffmpeg/lib/avdevice.lib\
-#        $$PWD/mpeg/ffmpeg/lib/avfilter.lib\
-#        $$PWD/mpeg/ffmpeg/lib/avformat.lib\
-#        $$PWD/mpeg/ffmpeg/lib/avutil.lib\
-#        $$PWD/mpeg/ffmpeg/lib/postproc.lib\
-#        $$PWD/mpeg/ffmpeg/lib/swresample.lib\
-#        $$PWD/mpeg/ffmpeg/lib/swscale.lib\
 
 LIBS += -L$${PWD}/mpeg/ffmpeg/lib \
     -lavcodec \

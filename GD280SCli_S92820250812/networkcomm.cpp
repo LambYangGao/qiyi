@@ -60,14 +60,6 @@ NetworkComm::NetworkComm(int role)
     memset(&msgFromZhiKong,0,sizeof(msgFromZhiKong));
 }
 
-/*
-int NetworkComm::connectCenter()
-{
-
-}
-*/
-
-// 在 networkcomm.cpp 的 centerSocket_Read_Data() 函数中的修改
 
 int NetworkComm::centerSocket_Read_Data()
 {
@@ -148,74 +140,6 @@ int NetworkComm::centerSocket_Read_Data()
     return 0;
 }
 
-#if 0
-int NetworkComm::centerSocket_Read_Data()
-{
-    int chk=0,len=0,m=0;
-    QByteArray buffer;
-    buffer = centerUdpSocket->readAll();
-    len=buffer.length();
-/*
-    unsigned char data[] = {0x5a, 0x47, 0x00, 0x10, 0x01, 0x00, 0x72, 0x7c, 0x24, 0xfa, 0x0b, 0xb8, 0x00, 0x00, 0x81, 0x03};
-
-    buffer.resize(16);
-    for(int i=0;i<16;i++)
-    {
-        buffer[i]=data[i];
-    }
-    len = 16; */
-    // 1. 数据包长度校验
-    if(len< RECVZHIKONGMSG_LEN)
-    {
-        //qDebug()<<"ZhiKong message len="<<buffer.length();
-        recvPacketErrCnt++;
-        return 50;
-    }
-
-    if( (len%RECVZHIKONGMSG_LEN) == 0 && len >=RECVZHIKONGMSG_LEN)
-    {
-       m = len-RECVZHIKONGMSG_LEN;
-    }
-    else
-    {
-        qDebug()<<"len err"<<len;
-        recvPacketErrCnt++;
-        return 100;
-    }
-//qDebug()<<"aaa m:"<<m<<"    :"<<buffer.toHex(' ');
-    // 2. 报文头校验
-    if(CTRHEADER != (uint8_t)buffer[m+0] || CTRHEADER2 != (uint8_t)buffer[m+1]  )
-    {
-        qDebug()<<"CTRHEADER != (uint8_t)buffer[0]";
-        recvPacketErrCnt++;
-        return 100;
-    }
-//qDebug()<<"bbb crc" <<" :"<<(uint16_t)(((uint8_t)buffer.at(m+14)<<8) + (uint8_t)buffer.at(m+15));
-    // 3. CRC校验
-    chk = calcChecksum(buffer,RECVZHIKONGMSG_LEN,m);
-    //if(chk != (uint16_t)((buffer.at(m+14)<<8) + buffer.at(m+15)))
-    if((((chk>>8)&0xff) != buffer.at(m+15)) && (chk&0xff) != buffer.at(m+14))
-    {
-         qDebug()<<"chk err:"<<chk<<"buf[14]"<<QString::number(buffer.at(14)) <<":"<<QString::number(buffer.at(15));
-         recvPacketErrCnt++;
-        return 100;
-    }
-
-    recvZhiKongPktCnt++;
-
-    // 4. 数据解析
-    msgFromZhiKong.cmdId = (uint8_t)buffer[m+4];
-    msgFromZhiKong.startTracking = (uint8_t)buffer[m+5];
-    msgFromZhiKong.zkFangWei = ((buffer[m+6]<<8)& 0x0000FF00) + (buffer[m+7]&0xff);
-    msgFromZhiKong.zkFuYang =  ((buffer[m+8]<<8)& 0x0000FF00) + (buffer[m+9]&0xff);
-    msgFromZhiKong.zkDistence = (( (buffer[m+10]<<8)& 0x0000FF00) + (uint8_t)buffer[m+11] ) / 10;
-    msgFromZhiKong.zkBianBeiDuiJiao =(uint8_t)buffer[m+12];
-
-//qDebug()<<"cmdId:"<<msgFromZhiKong.cmdId <<"    zkFangWei:"<<msgFromZhiKong.zkFangWei<<" zkFuYang:"<<msgFromZhiKong.zkFuYang <<" zkDistence:"<<msgFromZhiKong.zkDistence;
-    return 0;
-}
-#endif
-
 /*
  * 惯导数据：EB 90 76 00 AF 1F B8 FF 50 CA 4C 00 18 29 B6 FF 28 28 D5 FB 80 18 CB 18 63 F6 75 FF 00 00 00 70 B8 27 00 A3 2C C4 30 E5 44 40 4D C4 53 06 00 00 00 08 00 08 00 02 00 00 BF BB
  */
@@ -226,26 +150,6 @@ void NetworkComm::gyroSocket_Read_Data()
     buffer = centerUdpSocket->readAll();
     len=buffer.length();
     //qDebug()<<"recv Gyro message len="<<len;
-/*
-    unsigned char data[] = {0x5a, 0x47, 0x00, 0x10, 0x01, 0x00, 0x72, 0x7c, 0x24, 0xfa, 0x0b, 0xb8, 0x00, 0x00, 0x81, 0x03};
-
-    buffer.resize(16);
-    for(int i=0;i<16;i++)
-    {
-        buffer[i]=data[i];
-    }
-    len = 16; */
-
-    /*unsigned char data[] = {0xEB, 0x90, 0x76, 0x00, 0xAF, 0x1F, 0xB8, 0xFF, 0x50, 0xCA, 0x4C, 0x00, 0x18, 0x29, 0xB6, 0xFF, 0x28, 0x28, \
-                            0xD5, 0xFB, 0x80, 0x18, 0xCB, 0x18, 0x63, 0xF6, 0x75, 0xFF, 0x00, 0x00, 0x00, 0x70, 0xB8, 0x27, 0x00, 0xA3, \
-                            0x2C, 0xC4, 0x30, 0xE5, 0x44, 0x40, 0x4D, 0xC4, 0x53, 0x06, 0x00, 0x00, 0x00, 0x08, 0x00, 0x08, 0x00, 0x02, \
-                            0x00, 0x00, 0xBF, 0xBB};
-    buffer.resize(58);
-    for(int i=0;i<58;i++)
-    {
-        buffer[i]=data[i];
-    }
-    len = 58; */
 
     if(len< RECVGYROMSG_LEN)
     {
@@ -293,19 +197,6 @@ void NetworkComm::gyroSocket_Read_Data()
     //qDebug()<<"   Gyro roll:"<<QString::number(msgFromGyro.roll,'f',2) <<"    yaw:"<<msgFromGyro.yaw <<"    pitch:"<<msgFromGyro.pitch;
     return;
 }
-#if 0
-//4.3指挥命令回复(0xEa/0x41) （光电经纬仪发送到FW2）
-int NetworkComm::sendReply()
-{
-    if(ctrConnectFlag == false) return 100;
-
-
-    int chk = calcChecksum(cmd_cmd_reply,CTRMSG_BUF_LEN);
-    cmd_cmd_reply[41] = chk & 0xff;
-    centerUdpSocket->write((char *)cmd_cmd_reply,CTRMSG_BUF_LEN);
-    return 0;
-}
-#endif
 
 int NetworkComm::sendMsg()
 {
@@ -371,24 +262,6 @@ int NetworkComm::sendMsg()
     //qDebug()<<"sendMsg()"<<"crc:"<<chk <<"send Cnt:"<<sendZhiKongPktCnt;
     return 0;
 }
-/*
-void NetworkComm::heartBeat_timeOut()
-{
-
-}
-*/
-#if 0
-void NetworkComm::sendHeartbeat()
-{
-    if(ctrConnectFlag == false) return;
-
-    int chk = calcChecksum(cmd_heartbeat,CTRMSG_BUF_LEN);
-    cmd_heartbeat[41] = chk & 0xff;
-    centerUdpSocket->write((char *)cmd_heartbeat,CTRMSG_BUF_LEN);
-    sendHeartbeatCnt++;
-    return;
-}
-#endif
 
 
 int NetworkComm::initToZhiKongPacket()
@@ -562,23 +435,6 @@ void UdpRecvThread::readPendingDatagrams()
             continue;
     }
 }
-/*
-void UdpRecvThread::run()
-{
-    //crtMcSocket();
-    while (!m_bStop)
-    {
-        //if(m_bPause)    continue;
-        qDebug()<<"UdpRecvThread::run():";
-        QThread::msleep(1000);
-    }
-    mcUnbind();
-    delete udpSocket;
-    udpSocket = nullptr;
-    qDebug()<<"quit UdpRecvThread:";
-    return;
-    //exec();
-}*/
 
 void UdpRecvThread::crtMcSocket()
 {
@@ -651,32 +507,6 @@ UdpSendThread::~UdpSendThread()
 
 void UdpSendThread::run()
 {
-/*    //bool m_bPause = false;
-    udpSocket = new QUdpSocket();
-    qDebug()<<"UdpSendThread::run() thd:"<<QThread::currentThreadId();
-    groupAddress = QHostAddress("224.0.0.1");
-    mGroupPort = 38190;
-//    if(!udpSocket->bind(m_srcPort,QUdpSocket::ShareAddress |QUdpSocket::ReuseAddressHint))
-//    {
-//        qDebug() << "udp recv socket bind error";
-//    }
-
-    //udpSocket->setSocketOption(QAbstractSocket::SendBufferSizeSocketOption,128*1024*1024);
-
-    while (!m_bStop)
-    {
-        //if(m_bPause)    continue;
-
-        sendPkt.serialNo++;
-        if(sendPkt.serialNo>255) sendPkt.serialNo = 0;
-        //qDebug()<<"serialNo:"<<sendPkt.serialNo;
-        QThread::msleep(1000);
-    }
-qDebug()<<"quit UdpSendThread: 0"<<QThread::currentThreadId();
-    delete udpSocket;
-    qDebug()<<"quit UdpSendThread: 1";
-    timerTest->stop();
-    udpSocket = nullptr;*/
     qDebug()<<"quit UdpSendThread: 2";
     return;
 }
@@ -833,25 +663,5 @@ int UdpSendThread::mcSend(stPktFromPC * pkt)
 
 int UdpSendThread::findInterface()
 {
-#if 0
-    int iNetInterface_local_outer;
-    QString ip_Local_Outer = "30.74.38.13";
-     QList< QNetworkInterface > listAllNetInterface;
-     listAllNetInterface = QNetworkInterface::allInterfaces();
-
-    for(int index = 0; index < listAllNetInterface.size(); index++)  //循环将网卡名转换为人类可读，并追加到网卡列表后
-    {
-        if(listAllNetInterface.at(index).addressEntries().size()>=2)
-        {
-            if(ip_Local_Outer == listAllNetInterface.at(index).addressEntries().at(0).ip().toString() )  //这个系统下，0是ipv4地址，1是ipv6地址
-            //if(localIP == listAllNetInterface.at(index).addressEntries().at(0).ip().toString() )  //这个系统下，0是ipv4地址，1是ipv6地址
-            {
-                iNetInterface_local_outer = index;
-                break;
-            }
-        }
-    }
-    interface_outer = listAllNetInterface.at(iNetInterface_local_outer);
-#endif
     return 0;
 }

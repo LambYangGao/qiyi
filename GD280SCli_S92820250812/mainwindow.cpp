@@ -395,9 +395,6 @@ void MainWindow::initGlobalParam()
     double Site_L = 0;//站址经度 度°
     double Site_H = 0;//站址高程 m
     operateMode = OPMODE_MARKING;  //JoyStick;
-    mAETheo.dblA = 0;
-    mAETheo.dblE = 0;
-
 
     mPtzDirection_A = 0;
     mHdViewAngle_A = 30;
@@ -458,7 +455,6 @@ void MainWindow::initControlStat()
     ui->pb_CloseSelfTest->setVisible(0);
     ui->pb_OpenSelfTest_B->setVisible(0);
     ui->pb_CloseSelfTest_B->setVisible(0);
-    ui->sbx_cbx_backLightVal->setEnabled(false);
     ui->gbx_Expo->setEnabled(true);
 
     ui->lblPadDirection->installEventFilter(this);//安装事件过滤器
@@ -475,7 +471,6 @@ void MainWindow::initControlStat()
     validv3->setRange(0, 59);//
 
     ui->pbConfigSave->setEnabled(false);
-    ui->pbOsdWordSave->setEnabled(false);
     ui->leRecFileDir->setEnabled(false);
     ui->leSetIP->setEnabled(false);
     ui->leSetHdCamIP->setEnabled(false);
@@ -523,10 +518,6 @@ void MainWindow::initTimerAndThread()
     connect(timerZhiKongSocket,SIGNAL(timeout()),this,SLOT(zhiKongSocket_timeOut()));
     timerZhiKongSocket->start(50);  //20HZ
     qDebug()<<tr("start timer ZhiKongSocket");
-}
-
-void MainWindow::closeEvent(QCloseEvent *event)
-{
 }
 
 void MainWindow::on_lineEdit_IP_returnPressed()
@@ -785,7 +776,7 @@ void MainWindow::mousePressEvent(QMouseEvent *event)
             {    
 
             }
-            ui->lblPad->update();
+            //ui->lblPad->update();
         }
     }
     //光电B的鼠标点击跟踪
@@ -911,11 +902,6 @@ void MainWindow::sendCmd()
     cmd[8]=0;
     cmd[9]=0;
     udpskt->write((char *)cmd,8);
-}
-
-void MainWindow::on_SendText_changed()
-{
-
 }
 
 void MainWindow::CenterSocket_Read_Data()
@@ -1579,53 +1565,6 @@ bool MainWindow::eventFilter(QObject *watched, QEvent *event)
 
 }
 
-void MainWindow::drawCross(QLabel * uipad, QPixmap * fitPixmap)
-{
-    QPainter painter;
-    painter.begin(fitPixmap);
-
-    if(ui->rb_OSDColorGreen->isChecked())
-    {
-        painter.setPen(Qt::green);
-    }
-    else if(ui->rb_OSDColorRed->isChecked())
-    {
-        painter.setPen(Qt::red);	//红色
-    }
-    else if(ui->rb_0SDColorBlk->isChecked())
-    {
-        painter.setPen(Qt::black); //黑
-    }
-    else
-    {
-        painter.setPen(Qt::white); //白
-    }
-
-    int lblw;
-    int lblh;
-    if(currentMainSrc==1)
-    {
-        lblw=uipad->size().width()/2;
-        lblh=lblw * 0.5625;     //16:9 为：0.5625;
-    }
-    else
-    {
-        lblh=uipad->size().height()/2;
-        //lblw=lblh * 1.33;     //4:3 为 1.33;
-        lblh=uipad->size().height()/2;
-        lblw=uipad->size().width()/2;
-        int tmpdif = (uipad->size().width() - fitPixmap->width())/2;
-        lblw = lblw -tmpdif;
-    }
-
-    painter.drawLine(lblw-10,lblh ,lblw-50,lblh);
-    painter.drawLine(lblw+10,lblh ,lblw+50,lblh);
-    painter.drawLine(lblw,lblh-10,lblw,lblh-50);
-    painter.drawLine(lblw,lblh+10,lblw,lblh+50);
-    //painter.drawRect(nX-1, nY-1,2,2);
-    painter.end();
-}
-
 /*在pad上画方位角度示意
 direction: 方位， angle： 视场角*/
 void MainWindow::drawAngleMeter(QLabel * uipad,int direction,int angle, int pitch)
@@ -1678,14 +1617,6 @@ void MainWindow::drawViewAngle(QPixmap * fitPixmap,int scrWidth,int scrHeight)
 #define AZCHARARGIN 12
 #define AZCHARARGINY 32
 
-//在屏幕上画方位及俯仰刻度
-//视角计算公式
-//1920      =  2 * arcTan(5.3 /2f)      449~950  150~1500
-//640      =  2 * arcTan(10.88 /2f)
-void MainWindow::drawAzimuthScale(QPixmap * fitPixmap,int scrWidth,int scrHeight)
-{
-
-}
 void MainWindow::DrawGuideOSD(QPixmap * pixTmp, double dblCamField)
 {
     QPainter painter;
@@ -1707,65 +1638,6 @@ void MainWindow::DrawGuideOSD(QPixmap * pixTmp, double dblCamField)
         painter.drawText(ui->lblPad->width()/2-10,40, "REC");
     }
     painter.end();
-}
-
-void MainWindow::drawStickExpo(double expo)
-{
-}
-
-/*
- * 改变鼠标箭头，并画出鼠标点击处距离中心的xy偏移量
- * x_in y_in 为逻辑坐标
- */
-void MainWindow::drawMouseHit(QPixmap * fitPixmap,int x_in,int y_in)
-{
-    int w = 0;
-    int h = 0;
-    float rato_w,rato_h,scr_du;
-    if(ui->rb_selGDA->isChecked())
-        scr_du= IMAGE_PIXEL_WIDTH/(float)mHdViewAngle_A;
-    else
-        scr_du= IMAGE_PIXEL_WIDTH/(float)mHdViewAngle_B;
-    rato_w = (float)ui->lblPad->width()/(float)IMAGE_PIXEL_WIDTH;
-    rato_h = (float)ui->lblPad->height() /(float)IMAGE_PIXEL_HEIGHT;
-
-    w = rato_w * x_in;
-    h = rato_h * y_in;
-    QPen pen;//画笔对象
-    QBrush brush;
-    pen.setColor(QColor(0,0,0,0));//画笔颜色
-    pen.setWidth(1);//画笔粗细
-    brush.setColor(QColor(100,100,0,255));
-    brush.setStyle(Qt::SolidPattern);
-    QPainter p;
-    p.begin(fitPixmap);
-    pen.setColor(QColor(255,255,255,255));//画笔颜色
-    p.setPen(pen);
-    p.drawLine(w-20,h,w-10,h);
-    p.drawLine(w+20,h,w+10,h);
-    p.drawLine(w,h-20,w,h-10);
-    p.drawLine(w,h+20,w,h+10);
-
-    QFont font;
-    //设置显示字体的大小
-    font.setPixelSize(20);
-    pen.setColor( QColor(255, 255, 255,255));
-    p.setPen(pen);
-    p.setFont(font);
-    int diffx = (x_in - IMAGE_PIXEL_WIDTH/2)/scr_du * 60;
-    int diffy = (IMAGE_PIXEL_HEIGHT/2 - y_in)/scr_du * 60;
-
-    QString ParamText = QString::number(diffx, 10) +"," + QString::number(diffy, 10);
-    int a=20,b=20;
-    if(x_in>1730)
-    {
-        a=-130;
-    }
-    if(y_in<100)
-    {
-        b=-30;
-    }
-    p.drawText(w+a,h-b, ParamText);
 }
 
 //在label上画虚拟摇杆
@@ -2132,11 +2004,6 @@ void MainWindow::on_pbStop_pressed()
     };
 }
 
-void MainWindow::on_pbPicInPicOnOff_clicked()
-{
-
-}
-
 void MainWindow::on_pbUp_released()
 {
     QUdpSocket * udpskt = getCurMainPTZ();
@@ -2206,12 +2073,6 @@ void MainWindow::on_pbUp_pressed()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
 
-    if(ui->rb_flipPicOn->isChecked())
-    {
-        uint8_t * cmd = mPodCmd.crtSteplessCmd(0,-(pelco_spd_val* ANGLENET2DEG));
-        udpskt->write((char *)cmd,7);
-    }
-    else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(0,(pelco_spd_val* ANGLENET2DEG));
         if(connectFlag_A != false)
@@ -2231,12 +2092,6 @@ void MainWindow::on_pbDown_pressed()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
 
-    if(ui->rb_flipPicOn->isChecked())
-    {
-        uint8_t * cmd = mPodCmd.crtSteplessCmd(0,(pelco_spd_val* ANGLENET2DEG));
-        udpskt->write((char *)cmd,7);
-    }
-    else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(0,-(pelco_spd_val* ANGLENET2DEG));
         if(connectFlag_A != false)
@@ -2255,12 +2110,6 @@ void MainWindow::on_pbLeft_pressed()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
 
-    if(ui->rb_flipPicOn->isChecked())
-    {
-        uint8_t * cmd = mPodCmd.crtSteplessCmd(pelco_spd_val* ANGLENET2DEG,0);
-        udpskt->write((char *)cmd,7);
-    }
-    else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(-(pelco_spd_val* ANGLENET2DEG),0);
         if(connectFlag_A != false)
@@ -2279,13 +2128,6 @@ void MainWindow::on_pbRight_pressed()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
 
-    if(ui->rb_flipPicOn->isChecked())
-    {
-
-        uint8_t * cmd = mPodCmd.crtSteplessCmd(-(pelco_spd_val* ANGLENET2DEG),0);
-        udpskt->write((char *)cmd,7);
-    }
-    else
     {
         uint8_t * cmd = mPodCmd.crtSteplessCmd(pelco_spd_val* ANGLENET2DEG,0);
         if(connectFlag_A != false)
@@ -2343,10 +2185,6 @@ int MainWindow::adjFocusPosByDist(QUdpSocket * udpSocket,int dist)
     qDebug()<<"adjFocusPosByDist" <<focval;
     udpSocket->write((char *)hdCmdFocalTo ,sizeof(hdCmdFocalTo));
     postdist = t;
-}
-
-void MainWindow::calcAngleSpeed()
-{
 }
 
 void MainWindow::on_cbxPresetNoEdit_currentIndexChanged(int index)
@@ -2552,7 +2390,6 @@ void MainWindow::on_pbConfigSave_clicked()
 void MainWindow::setCtlObjStatus(bool enFlag)
 {
     ui->tabWidConfig->setEnabled(enFlag);
-    ui->pbOsdWordSave->setEnabled(enFlag);
     ui->cbxEditLock_sys->setEnabled(enFlag);
 
     ui->pbUp->setEnabled(enFlag);
@@ -2566,8 +2403,6 @@ void MainWindow::setCtlObjStatus(bool enFlag)
     ui->pbZoomIn->setEnabled(enFlag);
     ui->pbZoomOut->setEnabled(enFlag);
     ui->pbAutoFoc->setEnabled(enFlag);
-    ui->pbApUp->setEnabled(enFlag);
-    ui->pbApDown->setEnabled(enFlag);
     ui->pbToZero->setEnabled(enFlag);
     ui->lblPadDirection->setEnabled(enFlag);
     ui->lblPadDirection_B->setEnabled(enFlag);
@@ -2788,10 +2623,6 @@ int MainWindow::readCfgFile()
     ui->leSetBorderBeg->setText(QString::number(mBorder180Begin, 'f',3));
     ui->leSetBorderEnd->setText(QString::number(mBorder180End, 'f',3));
 
-    readSetting.beginGroup("PID");
-    mPtzDefSpeed = readSetting.value("Ptz_DefSpeed").toInt();
-    readSetting.endGroup();
-    ui->lePtzDefSpeed->setText(QString::number(mPtzDefSpeed));
     return 0;
 }
 
@@ -2853,21 +2684,6 @@ void MainWindow::writeCfgFile()
     mGD2MountPosZ = QString(ui->leGd2InstallZ->text()).toDouble();
     mBorder180Begin = QString(ui->leSetBorderBeg->text()).toDouble();
     mBorder180End = QString(ui->leSetBorderEnd->text()).toDouble();
-
-    setting.beginGroup("PID");
-    setting.setValue("Pid_X_Scale", ui->lePid_X_Scale->text());
-    setting.setValue("Pid_X_P", ui->lePid_X_P->text());
-    setting.setValue("Pid_X_I", ui->lePid_X_I->text());
-    setting.setValue("Pid_X_D", ui->lePid_X_D->text());
-    setting.setValue("Pid_Y_Scale", ui->lePid_Y_Scale->text());
-    setting.setValue("Pid_Y_P", ui->lePid_Y_P->text());
-    setting.setValue("Pid_Y_I", ui->lePid_Y_I->text());
-    setting.setValue("Pid_Y_D", ui->lePid_Y_D->text());
-    setting.setValue("Pid_MaxOut", ui->lePidMaxOut->text());
-    setting.setValue("Pid_MinOut", ui->lePidMinOut->text());
-    setting.setValue("Ptz_DefSpeed", ui->lePtzDefSpeed->text());
-    setting.endGroup();
-    mPtzDefSpeed = QString(ui->lePtzDefSpeed->text()).toInt();
 }
 
 char * MainWindow::rtrim(char *str)
@@ -3057,11 +2873,6 @@ int MainWindow::gotoNewLen(int autoZoomVal)
     udpSocket_A->write((char *)hdCmdsetDirctZoom ,sizeof(hdCmdsetDirctZoom));
     udpSocket_B->write((char *)hdCmdsetDirctZoom ,sizeof(hdCmdsetDirctZoom));
     return 0;
-}
-
-int MainWindow::getFocalFromLens(int ch,int inlensVal,int distance)
-{
-
 }
 
 int MainWindow::getZoomFromDistance(int distance)
@@ -3437,11 +3248,6 @@ void MainWindow::on_rb_trackStick_clicked()
     ui->rb_HGyroUnLock->setChecked(true);
 }
 
-void MainWindow::on_rb_trackTable_clicked()
-{
-
-}
-
 void MainWindow::on_rb_toZero_clicked()
 {
     QUdpSocket * udpskt = getCurMainPTZ();
@@ -3464,39 +3270,6 @@ void MainWindow::on_rb_Center_clicked()
 {
     pnetworkComm->msgToZhiKong.status = 1;
     operateMode = OPMODE_CENTER;
-}
-
-void MainWindow::on_rb_KcfMarking_clicked()
-{
-    qDebug()<<"on_rb_KcfMarking_clicked";
-    operateMode = OPMODE_MARKING;
-    ui->lblPad->setCursor(Qt::ArrowCursor);
-}
-
-void MainWindow::on_rb_TopHatMarking_clicked()
-{
-    operateMode = OPMODE_MARKING;
-    ui->lblPad->setCursor(Qt::ArrowCursor);
-    btnStatus = 0;
-}
-
-void MainWindow::on_rb_WhCentroidMarking_clicked()
-{
-    operateMode = OPMODE_MARKING;
-    ui->lblPad->setCursor(Qt::ArrowCursor);
-    btnStatus = 0;
-}
-
-void MainWindow::on_rb_BlkCentroidMarking_clicked()
-{
-    operateMode = OPMODE_MARKING;
-    ui->lblPad->setCursor(Qt::ArrowCursor);
-    btnStatus = 0;
-}
-
-void MainWindow::on_leOsdWord_textChanged(const QString &arg1)
-{
-    ui->pbOsdWordSave->setEnabled(true);
 }
 
 bool MainWindow::openSerialPort()
@@ -3712,14 +3485,6 @@ void MainWindow::on_leCenterCom_textChanged(const QString &arg1)
     leSetCenterComChanged= true;
 }
 
-void MainWindow::on_sldVidEnhance_valueChanged(int value)
-{
-}
-
-void MainWindow::on_sldVidBright_valueChanged(int value)
-{
-}
-
 void MainWindow::on_cbxDispOSDTime_clicked(bool checked)
 {
     fullscreen.mdispOSDTime = checked;
@@ -3746,21 +3511,6 @@ bool MainWindow::EnSetSysTimePrivilege()
     bool bSuc=AdjustTokenPrivileges(hToken, FALSE, &tkPriv, 0, (PTOKEN_PRIVILEGES)NULL, 0);
     CloseHandle(hToken);
     return bool(bSuc);
-}
-
-void MainWindow::on_cbxOSDFont_currentIndexChanged(const QString &arg1)
-{
-    ui->pbOsdWordSave->setEnabled(true);
-}
-
-void MainWindow::on_cbxOSDFontHeight_currentIndexChanged(const QString &arg1)
-{
-    ui->pbOsdWordSave->setEnabled(true);
-}
-
-void MainWindow::on_leOSDLocationY_textChanged(const QString &arg1)
-{
-    ui->pbOsdWordSave->setEnabled(true);
 }
 
 void MainWindow::on_cbxFullScreen_clicked()
@@ -3980,78 +3730,6 @@ void MainWindow::on_pClearbDbgOut_clicked()
     ui->te_Output->clear();
 }
 
-void MainWindow::on_pbApUp_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-
-    udpskt->write((char *)hdCmdApUp,sizeof(hdCmdApUp));
-}
-
-void MainWindow::on_pbApDown_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdApDown,sizeof(hdCmdApDown));
-}
-
-void MainWindow::on_pbApReset_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdApReset,sizeof(hdCmdApReset));
-}
-
-void MainWindow::on_pbShutterUp_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdShutterUp,sizeof(hdCmdShutterUp));
-}
-
-void MainWindow::on_pbApShutterDown_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdShutterDown,sizeof(hdCmdShutterDown));
-}
-
-void MainWindow::on_pbShutterReset_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdShutterReset,sizeof(hdCmdShutterReset));
-}
-
-void MainWindow::on_spb_Gamma_valueChanged(int arg1)
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    hdGamma[4] = ui->spb_Gamma->value() & 0xff;
-    udpskt->write((char *)hdGamma,sizeof(hdGamma));
-}
-
-void MainWindow::on_pbSharpenUp_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdSharpenUp,sizeof(hdCmdSharpenUp));
-}
-
-void MainWindow::on_pbSharpenDown_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdSharpenDown,sizeof(hdCmdSharpenDown));
-}
-
-void MainWindow::on_pbSharpenReset_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdCmdSharpenReset,sizeof(hdCmdSharpenReset));
-}
-
 void MainWindow::on_pbDbgSend_clicked()
 {
     uint8_t blkCmd[100];
@@ -4072,65 +3750,6 @@ void MainWindow::on_rb_ExpoAuto_clicked()
     if( udpskt == NULL) return;
     udpskt->write((char *)hdAEAuto ,sizeof(hdAEAuto));
     ui->gbx_Expo->setEnabled(true);
-}
-
-void MainWindow::on_rb_ExpoManual_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdAEManual ,sizeof(hdAEManual));
-    ui->gbx_Expo->setEnabled(false);
-}
-
-void MainWindow::on_rb_ExpoShutter_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdAEShutter ,sizeof(hdAEShutter));
-    ui->gbx_Expo->setEnabled(true);
-}
-
-void MainWindow::on_rb_ExpoIris_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdAEIris ,sizeof(hdAEIris));
-    ui->gbx_Expo->setEnabled(true);
-}
-
-void MainWindow::on_pbExpUp_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdExpoCompAdd ,sizeof(hdExpoCompAdd));
-}
-
-void MainWindow::on_pbExpDown_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdExpoCompDec ,sizeof(hdExpoCompDec));
-}
-
-void MainWindow::on_pbExpReset_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdExpoCompReset ,sizeof(hdExpoCompReset));
-}
-
-void MainWindow::on_rb_flipPicOff_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdPicFlipOff ,sizeof(hdPicFlipOff));
-}
-
-void MainWindow::on_rb_flipPicOn_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    udpskt->write((char *)hdPicFlipOn ,sizeof(hdPicFlipOn));
 }
 
 void MainWindow::on_rb_HGyroLock_clicked()
@@ -4159,88 +3778,6 @@ void MainWindow::on_rb_VGyroUnLock_clicked()
     QUdpSocket * udpskt = getCurMainPTZ();
     if( udpskt == NULL) return;
     udpskt->write((char *)VGyroUnLock ,sizeof(VGyroUnLock));
-}
-
-void MainWindow::on_cbx_WbMode_currentIndexChanged(int index)
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    int idx = ui->cbx_WbMode->currentIndex();
-
-    switch(idx)
-    {
-        case 0:
-                udpskt->write((char *)hdWBOutdoor ,sizeof(hdWBOutdoor));
-                break;
-        case 1:
-                udpskt->write((char *)hdWBIndoor ,sizeof(hdWBIndoor));
-            break;
-        case 2:
-                udpskt->write((char *)hdWBATW ,sizeof(hdWBATW));
-                break;
-        case 3:
-                udpskt->write((char *)hdWBManual ,sizeof(hdWBManual));
-                break;
-        case 4:
-                udpskt->write((char *)hdWBOutAuto ,sizeof(hdWBOutAuto));
-                break;
-        case 5:
-                udpskt->write((char *)hdWBSodiumAuto ,sizeof(hdWBSodiumAuto));
-                break;
-        case 6:
-                udpskt->write((char *)hdWBSodium ,sizeof(hdWBSodium));
-                break;
-
-        default:
-                break;
-
-    }
-    return;
-}
-
-void MainWindow::on_pbBackLightSend_clicked()
-{
-    QUdpSocket * udpskt = getCurMainPTZ();
-    if( udpskt == NULL) return;
-    int idx = ui->cbx_backLightMode->currentIndex();
-    int val = ui->sbx_cbx_backLightVal->value();
-
-    qDebug()<<"on_pbBackLightSend_clicked() idx:"<<idx;
-
-    switch(idx)
-    {
-        case 0:
-        case 1:
-            hdBackLight[4] = 0;
-            hdBackLight[5] = 0;
-            break;
-        case 2:
-        case 3:
-            hdBackLight[4] = (uint8_t)idx & 0xff;
-            hdBackLight[5] = (uint8_t)val & 0xff;
-            break;
-    }
-    udpskt->write((char *)hdBackLight ,sizeof(hdBackLight));
-}
-
-void MainWindow::on_cbx_backLightMode_currentIndexChanged(int index)
-{
-    int idx = ui->cbx_backLightMode->currentIndex();
-    int val = ui->sbx_cbx_backLightVal->value();
-
-    qDebug()<<"on_cbx_backLightMode_currentIndexChanged() idx:"<<idx;
-
-    switch(idx)
-    {
-        case 0:
-        case 1:
-            ui->sbx_cbx_backLightVal->setEnabled(false);
-            break;
-        case 2:
-        case 3:
-            ui->sbx_cbx_backLightVal->setEnabled(true);
-            break;
-    }
 }
 
 void MainWindow::on_pbSetDirection_clicked()
@@ -4357,14 +3894,6 @@ void MainWindow::on_pbDbgSendBorderChk_clicked()
 void MainWindow::on_rb_SelDetectNone_clicked()
 {
     ui->cbxStartTracking->setChecked(false);
-}
-
-void MainWindow::on_rb_SelDetectMtd1_clicked()
-{
-}
-
-void MainWindow::on_rb_SelDetectMtd2_clicked()
-{
 }
 
 //原文链接：https://blog.csdn.net/Y_Bingo/article/details/90345601
@@ -4523,18 +4052,6 @@ void MainWindow::on_cbxStartTracking_stateChanged(int arg1)
             };
         }
     }
-}
-
-void MainWindow::on_rb_DefogOff_clicked()
-{
-    udpSocket_A->write((char *)hdCmdDefogOff ,sizeof(hdCmdDefogOff));
-    udpSocket_B->write((char *)hdCmdDefogOff ,sizeof(hdCmdDefogOff));
-}
-
-void MainWindow::on_rb_DefogOn_clicked()
-{
-    udpSocket_A->write((char *)hdCmdDefogOn ,sizeof(hdCmdDefogOn));
-    udpSocket_B->write((char *)hdCmdDefogOn ,sizeof(hdCmdDefogOn));
 }
 
 void MainWindow::quitAndShutdown()
